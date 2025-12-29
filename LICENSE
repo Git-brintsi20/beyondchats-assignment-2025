@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2025 S_Harshita_B
+Copyright (c) 2025 Salugu Harshita Bhanu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -9,8 +9,17 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+
+2. **ATTRIBUTION REQUIREMENT**: Any commercial use, deployment, or derivative work
+   based on this Software must provide clear attribution to the original author
+   (Salugu Harshita Bhanu) in the application's documentation, about page, or 
+   prominently visible location.
+
+3. **ASSIGNMENT WATERMARK**: This software was created as an assignment submission
+   for BeyondChats. Any use by BeyondChats or affiliated entities without
+   a formal employment agreement is considered a violation of this license.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -19,3 +28,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+NOTICE: This is an assignment/demonstration project. Commercial use without
+explicit written permission from the author is prohibited.
+
+For licensing inquiries, contact: [shiki2hustle@gmail.com]
