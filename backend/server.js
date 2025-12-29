@@ -65,9 +65,8 @@ app.get('/health', (req, res) => {
 });
 
 // API Routes
-// TODO: Import and use article routes
-// import articleRoutes from './src/routes/articles.js';
-// app.use(`${API_PREFIX}/articles`, articleRoutes);
+import articleRoutes from './src/routes/articles.js';
+app.use(`${API_PREFIX}/articles`, articleRoutes);
 
 // 404 handler
 app.use(notFoundHandler);
