@@ -18,6 +18,9 @@ class ContentDiscoveryAgent {
     this.claudeAnalyzer = new ClaudeAnalyzer();
     this.database = new DatabaseService();
     this.demoMode = process.env.DEMO_MODE === 'true';
+    
+    // Pass demo mode to scraper for consistent behavior
+    this.contentScraper.demoMode = this.demoMode;
   }
 
   /**

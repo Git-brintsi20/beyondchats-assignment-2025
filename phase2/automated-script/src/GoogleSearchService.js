@@ -104,20 +104,24 @@ class GoogleSearchService {
 
   /**
    * Get mock search results for demo mode
+   * UPDATED: Returns REAL URLs so the scraper actually works
    */
   getMockResults(query) {
     console.log(`🔍 Mock search for: "${query}"`);
     
+    // Return REAL, SCRAPABLE URLs so ContentScraper doesn't crash
+    // Using high-authority sites that are always online and easy to parse
+    
     return [
       {
-        title: `Complete Guide to ${query} - Best Practices`,
-        url: `https://example-blog.com/guides/${query.toLowerCase().replace(/\s+/g, '-')}`,
-        snippet: `Learn everything about ${query} with our comprehensive guide covering best practices, tips, and real-world examples.`
+        title: `Artificial Intelligence - Wikipedia (Context: ${query})`,
+        url: `https://en.wikipedia.org/wiki/Artificial_intelligence`,
+        snippet: `Artificial intelligence (AI) is the intelligence of machines or software, as opposed to the intelligence of humans or animals.`
       },
       {
-        title: `${query}: What You Need to Know in 2025`,
-        url: `https://tech-insights.com/articles/${query.toLowerCase().replace(/\s+/g, '-')}-2025`,
-        snippet: `An in-depth analysis of ${query} and its impact on modern businesses. Industry experts share their insights.`
+        title: `What is Artificial Intelligence (AI)? | IBM`,
+        url: `https://www.ibm.com/topics/artificial-intelligence`,
+        snippet: `Artificial intelligence (AI) leverages computers and machines to mimic the problem-solving and decision-making capabilities of the human mind.`
       }
     ];
   }

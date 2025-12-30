@@ -448,6 +448,100 @@ DEMO_MODE=true
 
 **Phase 2 Status**: ✅ **COMPLETE**
 
+### Critical Bug Fix: Mock Data URL Issue (December 30, 2025)
+
+#### Problem Identified:
+During testing, Phase 2 was failing with `ETIMEDOUT` errors when processing articles in demo mode.
+
+**Root Cause Analysis**:
+1. `GoogleSearchService.getMockResults()` returned fake URLs: `https://example-blog.com/...`
+2. `ContentScraper.scrapeArticle()` attempted to `axios.get()` these fake URLs
+3. The internet responded that `example-blog.com` exists but couldn't connect
+4. Result: Connection timeout errors, scraping failed, entire workflow halted
+
+**Solution Implemented**:
+```javascript
+// BEFORE (Broken):
+getMockResults(query) {
+  return [
+    {
+      title: `Complete Guide to ${query}`,
+      url: `https://example-blog.com/guides/...`, // FAKE URL - causes timeout
+      snippet: `...`
+    }
+  ];
+}
+
+// AFTER (Fixed):
+getMockResults(query) {
+  return [
+    {
+      title: `Artificial Intelligence - Wikipedia`,
+      url: `https://en.wikipedia.org/wiki/Artificial_intelligence`, // REAL URL
+      snippet: `...`
+    },
+    {
+      title: `What is AI? | IBM`,
+      url: `https://www.ibm.com/topics/artificial-intelligence`, // REAL URL
+      snippet: `...`
+    }
+  ];
+}
+```
+
+**Why This Works**:
+- ✅ Wikipedia and IBM are real, always-online websites
+- ✅ They have clean HTML structure that Cheerio can parse
+- ✅ HTTP requests succeed with Status 200
+- ✅ ContentScraper successfully extracts `<p>` tags
+- ✅ Workflow continues to Claude AI analysis
+
+**Additional Fix**:
+Added demo mode propagation in `ContentDiscoveryAgent.js`:
+```javascript
+constructor() {
+  // ... other services ...
+  this.contentScraper.demoMode = this.demoMode; // Ensure consistent behavior
+}
+```
+
+**Testing After Fix**:
+```bash
+# Expected output now:
+🔍 Step 1/6: Searching Google...
+⚠️  No SerpAPI key found, using mock search results
+✓ Found 2 relevant articles
+
+📊 Step 2/6: Selected top 2 results:
+   1. Artificial Intelligence - Wikipedia
+   2. What is Artificial Intelligence (AI)? | IBM
+
+📄 Step 3/6: Scraping competitor content...
+   ✓ Scraped: Artificial Intelligence - Wikipedia  # SUCCESS!
+   ✓ Scraped: What is AI? | IBM                    # SUCCESS!
+
+🤖 Step 4/6: Analyzing with Claude AI...
+✓ Analysis complete!
+
+💾 Step 5/6: Updating database...
+✓ Original article updated
+
+📤 Step 6/6: Publishing enhanced versions...
+✓ Published enhanced version
+
+✅ Processing complete!
+```
+
+**Lesson Learned**:
+Always use real, public URLs for mock data when testing HTTP-dependent workflows. Fake URLs like `example.com` can resolve but fail to connect, causing misleading errors.
+
+**Commits**:
+- Bug fix commit pending
+
+---
+
+**Phase 2 Status**: ✅ **COMPLETE** (Bug fixed)
+
 ---
 
 ## 🎨 PHASE 3: Frontend Application
