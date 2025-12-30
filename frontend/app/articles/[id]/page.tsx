@@ -295,31 +295,33 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
           </Card>
         )}
 
-        {/* Related Articles */}
-        <div className="my-12 space-y-6">
-          <h3 className="text-xl font-bold text-foreground">Related Articles</h3>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {article.relatedArticles.map((related, idx) => (
-              <Link key={related.id} href={`/articles/${related.id}`}>
-                <Card className="group h-full cursor-pointer transition-all hover:shadow-lg hover:shadow-primary/20 hover:border-primary bg-card hover:bg-card/80">
-                  <div className="p-5 space-y-3" style={{ animationDelay: `${idx * 50}ms` }}>
-                    <h4 className="line-clamp-2 font-semibold text-foreground group-hover:text-primary transition-colors">
-                      {related.title}
-                    </h4>
-                    <p className="line-clamp-2 text-sm text-muted-foreground">{related.excerpt}</p>
-                    <div className="flex gap-1 flex-wrap">
-                      {related.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
+        {/* Related Articles - Hidden for now as backend doesn't provide this data */}
+        {article.relatedArticles && article.relatedArticles.length > 0 && (
+          <div className="my-12 space-y-6">
+            <h3 className="text-xl font-bold text-foreground">Related Articles</h3>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {article.relatedArticles.map((related, idx) => (
+                <Link key={related.id} href={`/articles/${related.id}`}>
+                  <Card className="group h-full cursor-pointer transition-all hover:shadow-lg hover:shadow-primary/20 hover:border-primary bg-card hover:bg-card/80">
+                    <div className="p-5 space-y-3" style={{ animationDelay: `${idx * 50}ms` }}>
+                      <h4 className="line-clamp-2 font-semibold text-foreground group-hover:text-primary transition-colors">
+                        {related.title}
+                      </h4>
+                      <p className="line-clamp-2 text-sm text-muted-foreground">{related.excerpt}</p>
+                      <div className="flex gap-1 flex-wrap">
+                        {related.tags.map((tag) => (
+                          <Badge key={tag} variant="outline" className="text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </Card>
-              </Link>
-            ))}
+                  </Card>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Back Button */}
         <div className="mt-12 border-t border-border pt-8">
