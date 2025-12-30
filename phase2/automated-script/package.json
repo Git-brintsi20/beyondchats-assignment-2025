@@ -1,0 +1,37 @@
+{
+  "name": "beyondchats-content-discovery",
+  "version": "1.0.0",
+  "description": "Automated content discovery and enhancement with Claude AI",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "process:all": "node index.js --mode=batch",
+    "process:single": "node index.js --mode=single"
+  },
+  "keywords": [
+    "content-discovery",
+    "claude-ai",
+    "google-search",
+    "web-scraping"
+  ],
+  "author": "S_Harshit_B <shiki2hustle@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "axios": "^1.6.5",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.3.1",
+    "winston": "^3.11.0",
+    "chalk": "^5.3.0",
+    "ora": "^8.0.1",
+    "inquirer": "^9.2.12",
+    "cli-table3": "^0.6.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2"
+  }
+}

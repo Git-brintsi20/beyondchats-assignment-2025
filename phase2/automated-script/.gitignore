@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+
+# Cache
+.cache/
+*.cache
+
+# IDE
+.vscode/
+.idea/
