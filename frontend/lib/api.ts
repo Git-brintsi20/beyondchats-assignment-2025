@@ -40,6 +40,19 @@ export interface ArticleListResponse {
   limit: number;
 }
 
+// Backend API response wrapper
+interface BackendResponse<T> {
+  success: boolean;
+  data: T;
+  pagination?: {
+    total: number;
+    pages: number;
+    current: number;
+    limit: number;
+  };
+  message?: string;
+}
+
 export interface StatsResponse {
   total: number;
   original: number;
@@ -103,8 +116,16 @@ export async function getAllArticles(params?: {
   sortBy?: string;
 }): Promise<ArticleListResponse> {
   try {
-    const response = await apiClient.get<ArticleListResponse>('/articles', { params });
-    return response.data;
+    const response = await apiClient.get<BackendResponse<Article[]>>('/articles', { params });
+    
+    // Transform backend response to frontend format
+    return {
+      articles: response.data.data || [],
+      total: response.data.pagination?.total || 0,
+      pages: response.data.pagination?.pages || 0,
+      currentPage: response.data.pagination?.current || 1,
+      limit: response.data.pagination?.limit || 10
+    };
   } catch (error) {
     throw handleApiError(error);
   }
@@ -115,8 +136,8 @@ export async function getAllArticles(params?: {
  */
 export async function getArticleById(id: string): Promise<Article> {
   try {
-    const response = await apiClient.get<Article>(`/articles/${id}`);
-    return response.data;
+    const response = await apiClient.get<BackendResponse<Article>>(`/articles/${id}`);
+    return response.data.data;
   } catch (error) {
     throw handleApiError(error);
   }
@@ -127,8 +148,8 @@ export async function getArticleById(id: string): Promise<Article> {
  */
 export async function createArticle(article: Partial<Article>): Promise<Article> {
   try {
-    const response = await apiClient.post<Article>('/articles', article);
-    return response.data;
+    const response = await apiClient.post<BackendResponse<Article>>('/articles', article);
+    return response.data.data;
   } catch (error) {
     throw handleApiError(error);
   }
@@ -139,8 +160,8 @@ export async function createArticle(article: Partial<Article>): Promise<Article>
  */
 export async function updateArticle(id: string, updates: Partial<Article>): Promise<Article> {
   try {
-    const response = await apiClient.put<Article>(`/articles/${id}`, updates);
-    return response.data;
+    const response = await apiClient.put<BackendResponse<Article>>(`/articles/${id}`, updates);
+    return response.data.data;
   } catch (error) {
     throw handleApiError(error);
   }
@@ -151,8 +172,8 @@ export async function updateArticle(id: string, updates: Partial<Article>): Prom
  */
 export async function deleteArticle(id: string): Promise<{ message: string }> {
   try {
-    const response = await apiClient.delete<{ message: string }>(`/articles/${id}`);
-    return response.data;
+    const response = await apiClient.delete<BackendResponse<null>>(`/articles/${id}`);
+    return { message: response.data.message || 'Article deleted successfully' };
   } catch (error) {
     throw handleApiError(error);
   }
@@ -163,8 +184,8 @@ export async function deleteArticle(id: string): Promise<{ message: string }> {
  */
 export async function triggerScraping(): Promise<ScrapeResponse> {
   try {
-    const response = await apiClient.post<ScrapeResponse>('/articles/scrape');
-    return response.data;
+    const response = await apiClient.post<BackendResponse<ScrapeResponse>>('/articles/scrape');
+    return response.data.data;
   } catch (error) {
     throw handleApiError(error);
   }
@@ -175,8 +196,8 @@ export async function triggerScraping(): Promise<ScrapeResponse> {
  */
 export async function getStats(): Promise<StatsResponse> {
   try {
-    const response = await apiClient.get<StatsResponse>('/articles/stats');
-    return response.data;
+    const response = await apiClient.get<BackendResponse<StatsResponse>>('/articles/stats');
+    return response.data.data;
   } catch (error) {
     throw handleApiError(error);
   }
@@ -191,13 +212,21 @@ export async function searchArticles(query: string, filters?: {
   limit?: number;
 }): Promise<ArticleListResponse> {
   try {
-    const response = await apiClient.get<ArticleListResponse>('/articles', {
+    const response = await apiClient.get<BackendResponse<Article[]>>('/articles', {
       params: {
         search: query,
         ...filters,
       },
     });
-    return response.data;
+    
+    // Transform backend response to frontend format
+    return {
+      articles: response.data.data || [],
+      total: response.data.pagination?.total || 0,
+      pages: response.data.pagination?.pages || 0,
+      currentPage: response.data.pagination?.current || 1,
+      limit: response.data.pagination?.limit || 10
+    };
   } catch (error) {
     throw handleApiError(error);
   }
