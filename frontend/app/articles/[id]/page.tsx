@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card"
 import { Breadcrumb } from "@/components/breadcrumb"
 import { getArticleById, type Article } from "@/lib/api"
 import { format } from "date-fns"
+import { PageTransition } from "@/components/page-transition"
 import {
   Heart,
   Bookmark,
@@ -103,40 +104,43 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <PageTransition>
+      <div className="min-h-screen bg-background">
+        <Header />
 
-      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <Breadcrumb
-          items={[{ label: "Home", href: "/" }, { label: "Articles", href: "/" }, { label: article.title }]}
-        />
-
-        {/* Hero Section */}
-        <div className="mt-8 animate-slide-up space-y-6">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold text-foreground sm:text-5xl leading-tight">{article.title}</h1>
-            {article.excerpt && (
-              <p className="text-xl text-muted-foreground">{article.excerpt}</p>
-            )}
-          </div>
-
-          {/* Article Image */}
-          <div className="relative h-96 w-full overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20">
-            <img 
-              src={article.thumbnail || "/placeholder.svg"} 
-              alt={article.title} 
-              className="h-full w-full object-cover" 
+        <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+          {/* Breadcrumb */}
+          <div className="fade-in">
+            <Breadcrumb
+              items={[{ label: "Home", href: "/" }, { label: "Articles", href: "/" }, { label: article.title }]}
             />
-            {isEnhanced && (
-              <div className="absolute top-4 right-4">
-                <Badge className="bg-primary text-primary-foreground gap-1 flex items-center">
-                  <Sparkles className="h-3 w-3" />
-                  AI Enhanced
-                </Badge>
-              </div>
-            )}
           </div>
+
+          {/* Hero Section */}
+          <div className="mt-8 space-y-6">
+            <div className="space-y-4">
+              <h1 className="zoom-match-cut text-4xl font-bold text-foreground sm:text-5xl leading-tight">{article.title}</h1>
+              {article.excerpt && (
+                <p className="glide-in text-xl text-muted-foreground">{article.excerpt}</p>
+              )}
+            </div>
+
+            {/* Article Image */}
+            <div className="relative h-96 w-full overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 scale-in">
+              <img 
+                src={article.thumbnail || "/placeholder.svg"} 
+                alt={article.title} 
+                className="h-full w-full object-cover transition-transform duration-700 hover:scale-110" 
+              />
+              {isEnhanced && (
+                <div className="absolute top-4 right-4 swipe-in-right">
+                  <Badge className="bg-primary text-primary-foreground gap-1 flex items-center backdrop-blur-sm">
+                    <Sparkles className="h-3 w-3 animate-pulse" />
+                    AI Enhanced
+                  </Badge>
+                </div>
+              )}
+            </div>
 
           {/* Article Metadata */}
           <div className="flex items-center justify-between border-y border-border py-4">
@@ -156,9 +160,9 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
 
           {/* Tags */}
           {article.tags && article.tags.length > 0 && (
-            <div className="flex gap-2 flex-wrap">
-              {article.tags.map((tag) => (
-                <Badge key={tag} className="bg-primary/20 text-primary hover:bg-primary/30">
+            <div className="flex gap-2 flex-wrap glide-in">
+              {article.tags.map((tag, idx) => (
+                <Badge key={tag} className={`bg-primary/20 text-primary hover:bg-primary/30 transition-smooth hover-scale stagger-${(idx % 6) + 1}`}>
                   {tag}
                 </Badge>
               ))}
@@ -167,11 +171,11 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
         </div>
 
         {/* Action Buttons */}
-        <div className="my-8 flex flex-wrap gap-3">
+        <div className="my-8 flex flex-wrap gap-3 fade-in">
           <Button
             variant="outline"
             onClick={() => setIsLiked(!isLiked)}
-            className={`gap-2 ${isLiked ? "bg-red-50 text-red-600 dark:bg-red-950" : ""}`}
+            className={`gap-2 transition-smooth hover-lift ${isLiked ? "bg-red-50 text-red-600 dark:bg-red-950" : ""}`}
           >
             <Heart className="h-4 w-4" fill={isLiked ? "currentColor" : "none"} />
             {isLiked ? "Liked" : "Like"}
@@ -179,24 +183,24 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
           <Button
             variant="outline"
             onClick={() => setIsSaved(!isSaved)}
-            className={`gap-2 ${isSaved ? "bg-primary/20 text-primary" : ""}`}
+            className={`gap-2 transition-smooth hover-lift ${isSaved ? "bg-primary/20 text-primary" : ""}`}
           >
             <Bookmark className="h-4 w-4" fill={isSaved ? "currentColor" : "none"} />
             {isSaved ? "Saved" : "Save"}
           </Button>
 
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="gap-2 bg-transparent" title="Share on Twitter">
+            <Button variant="outline" size="sm" className="gap-2 bg-transparent hover-scale" title="Share on Twitter">
               <Twitter className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" className="gap-2 bg-transparent" title="Share on LinkedIn">
+            <Button variant="outline" size="sm" className="gap-2 bg-transparent hover-scale" title="Share on LinkedIn">
               <LinkedinIcon className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={handleCopyLink}
-              className="gap-2 bg-transparent"
+              className="gap-2 bg-transparent hover-scale"
               title="Copy link to clipboard"
             >
               {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -205,7 +209,7 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
         </div>
 
         {/* Article Content */}
-        <article className="prose prose-invert max-w-none space-y-8 py-8 text-foreground">
+        <article className="prose prose-invert max-w-none space-y-8 py-8 text-foreground glide-in">
           <div className="space-y-6 leading-relaxed text-lg whitespace-pre-wrap">
             {article.content}
           </div>
@@ -213,10 +217,10 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
 
         {/* AI Enhancement Section */}
         {isEnhanced && article.metadata && (
-          <Card className="my-12 border-border p-6">
+          <Card className="my-12 border-border p-6 zoom-match-cut">
             <button
               onClick={() => setShowEnhancementDetails(!showEnhancementDetails)}
-              className="flex w-full items-center justify-between rounded-lg border border-border bg-primary/5 p-4 hover:bg-primary/10 transition-colors"
+              className="flex w-full items-center justify-between rounded-lg border border-border bg-primary/5 p-4 hover:bg-primary/10 transition-smooth hover-lift"
             >
               <div className="flex items-center gap-3">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -233,21 +237,21 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
             </button>
 
             {showEnhancementDetails && (
-              <div className="mt-4 space-y-6 animate-slide-up">
+              <div className="mt-4 space-y-6 slide-down">
                 <div className="grid gap-4 sm:grid-cols-3">
-                  <Card className="border-border bg-card p-4">
+                  <Card className="border-border bg-card p-4 hover-lift transition-smooth">
                     <p className="text-xs font-medium text-muted-foreground">Word Count</p>
                     <p className="mt-2 text-2xl font-bold text-foreground">
                       {article.metadata.wordCount || 'N/A'}
                     </p>
                   </Card>
-                  <Card className="border-border bg-card p-4">
+                  <Card className="border-border bg-card p-4 hover-lift transition-smooth stagger-1">
                     <p className="text-xs font-medium text-muted-foreground">Reading Time</p>
                     <p className="mt-2 text-2xl font-bold text-foreground">
                       {article.metadata.readingTime ? `${article.metadata.readingTime} min` : 'N/A'}
                     </p>
                   </Card>
-                  <Card className="border-border bg-card p-4">
+                  <Card className="border-border bg-card p-4 hover-lift transition-smooth stagger-2">
                     <p className="text-xs font-medium text-muted-foreground">Similarity Score</p>
                     <p className="mt-2 text-2xl font-bold text-primary">
                       {article.metadata.similarityScore ? `${article.metadata.similarityScore}%` : 'N/A'}
@@ -285,7 +289,7 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
                 )}
 
                 <Link href={`/compare/original/${article._id}`}>
-                  <Button className="w-full gap-2 bg-primary hover:bg-primary/90">
+                  <Button className="w-full gap-2 bg-primary hover:bg-primary/90 hover-lift">
                     <BarChart3 className="h-4 w-4" />
                     View Detailed Comparison
                   </Button>
@@ -297,20 +301,20 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
 
         {/* Related Articles - Hidden for now as backend doesn't provide this data */}
         {article.relatedArticles && article.relatedArticles.length > 0 && (
-          <div className="my-12 space-y-6">
+          <div className="my-12 space-y-6 fade-in-blur">
             <h3 className="text-xl font-bold text-foreground">Related Articles</h3>
             <div className="grid gap-4 sm:grid-cols-3">
               {article.relatedArticles.map((related, idx) => (
                 <Link key={related.id} href={`/articles/${related.id}`}>
-                  <Card className="group h-full cursor-pointer transition-all hover:shadow-lg hover:shadow-primary/20 hover:border-primary bg-card hover:bg-card/80">
-                    <div className="p-5 space-y-3" style={{ animationDelay: `${idx * 50}ms` }}>
-                      <h4 className="line-clamp-2 font-semibold text-foreground group-hover:text-primary transition-colors">
+                  <Card className={`group h-full cursor-pointer transition-all hover:shadow-lg hover:shadow-primary/20 hover:border-primary bg-card hover:bg-card/80 zoom-match-cut stagger-${(idx % 3) + 1}`}>
+                    <div className="p-5 space-y-3">
+                      <h4 className="line-clamp-2 font-semibold text-foreground group-hover:text-primary transition-smooth">
                         {related.title}
                       </h4>
                       <p className="line-clamp-2 text-sm text-muted-foreground">{related.excerpt}</p>
                       <div className="flex gap-1 flex-wrap">
                         {related.tags.map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">
+                          <Badge key={tag} variant="outline" className="text-xs hover-scale">
                             {tag}
                           </Badge>
                         ))}
@@ -324,13 +328,14 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
         )}
 
         {/* Back Button */}
-        <div className="mt-12 border-t border-border pt-8">
-          <Link href="/" className="flex items-center gap-2 text-primary hover:underline w-fit">
+        <div className="mt-12 border-t border-border pt-8 fade-in">
+          <Link href="/" className="flex items-center gap-2 text-primary hover:underline w-fit hover-lift transition-smooth">
             <ArrowLeft className="h-4 w-4" />
             Back to Articles
           </Link>
         </div>
       </main>
     </div>
+    </PageTransition>
   )
 }

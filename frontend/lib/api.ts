@@ -30,6 +30,12 @@ export interface Article {
     keywords?: string[];
     references?: Array<{ title: string; url: string }>;
   };
+  relatedArticles?: Array<{
+    id: string;
+    title: string;
+    excerpt: string;
+    tags: string[];
+  }>;
 }
 
 export interface ArticleListResponse {

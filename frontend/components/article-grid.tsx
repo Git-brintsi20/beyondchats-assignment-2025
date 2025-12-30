@@ -248,24 +248,24 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
             className="animate-in fade-in slide-in-from-bottom-4 duration-500"
             style={{ animationDelay: `${index * 100}ms` }}
           >
-            <Card className="group h-full overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer border-border/50">
-              <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 h-48">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+            <Card className={`group h-full overflow-hidden transition-all duration-300 hover:shadow-xl shadow-primary hover:scale-[1.02] hover:-translate-y-1 cursor-pointer border-border/50 zoom-match-cut stagger-${(index % 6) + 1}`}>
+              <div className="relative overflow-hidden gradient-ocean h-48">
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                 <img
                   src={article.thumbnail || "/placeholder.svg"}
                   alt={article.title}
-                  className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
+                  className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-1 mix-blend-overlay opacity-80"
                 />
                 {(isEnhanced || isUpdated) && (
                   <div className="absolute top-3 right-3 flex flex-col gap-2 z-20">
                     {isEnhanced && (
-                      <Badge className="bg-primary text-primary-foreground gap-1 flex items-center animate-in slide-in-from-right duration-300 backdrop-blur-sm">
+                      <Badge className="gradient-primary text-primary-foreground gap-1 flex items-center swipe-in-right glass border-0">
                         <Sparkles className="h-3 w-3 animate-pulse" />
                         Enhanced
                       </Badge>
                     )}
                     {isUpdated && (
-                      <Badge variant="secondary" className="animate-in slide-in-from-right duration-300 backdrop-blur-sm" style={{ animationDelay: '100ms' }}>
+                      <Badge variant="secondary" className="swipe-in-right stagger-1 glass gradient-secondary text-secondary-foreground border-0">
                         Updated
                       </Badge>
                     )}
@@ -285,7 +285,7 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
 
                 <div className="flex gap-2 flex-wrap">
                   {article.tags?.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
+                    <Badge key={tag} variant="outline" className="text-xs transition-smooth hover:scale-110 hover:border-primary">
                       {tag}
                     </Badge>
                   ))}
@@ -308,7 +308,7 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
                   </div>
                 </div>
 
-                <Button variant="ghost" className="w-full gap-2 mt-auto text-primary group-hover:gap-4 transition-all duration-300 group-hover:bg-primary/10">
+                <Button variant="ghost" className="w-full gap-2 mt-auto text-primary group-hover:gap-4 transition-all duration-300 group-hover:bg-primary/10 hover-scale">
                   Read Article 
                   <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </Button>
