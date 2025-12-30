@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, use } from "react"
 import Link from "next/link"
 import Header from "@/components/header"
 import { Button } from "@/components/ui/button"
@@ -9,7 +9,8 @@ import { Badge } from "@/components/ui/badge"
 import { Breadcrumb } from "@/components/breadcrumb"
 import { ArrowLeft, Eye, Maximize2, Focus } from "lucide-react"
 
-export default function ComparisonPage({ params }: { params: { id: string } }) {
+export default function ComparisonPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [viewMode, setViewMode] = useState<"side-by-side" | "stacked" | "differences">("side-by-side")
   const [syncScroll, setSyncScroll] = useState(true)
 

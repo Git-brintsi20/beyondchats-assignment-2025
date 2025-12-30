@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import Link from "next/link"
 import Header from "@/components/header"
 import { Badge } from "@/components/ui/badge"
@@ -24,7 +24,8 @@ import {
   Loader2,
 } from "lucide-react"
 
-export default function ArticleDetailPage({ params }: { params: { id: string } }) {
+export default function ArticleDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [isSaved, setIsSaved] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [showEnhancementDetails, setShowEnhancementDetails] = useState(false)
@@ -37,7 +38,7 @@ export default function ArticleDetailPage({ params }: { params: { id: string } }
     async function fetchArticle() {
       try {
         setLoading(true)
-        const data = await getArticleById(params.id)
+        const data = await getArticleById(id)
         setArticle(data)
       } catch (err: any) {
         setError(err.message || 'Failed to load article')
@@ -47,7 +48,7 @@ export default function ArticleDetailPage({ params }: { params: { id: string } }
     }
     
     fetchArticle()
-  }, [params.id])
+  }, [id])
 
   if (loading) {
     return (
