@@ -285,30 +285,34 @@ export default function ArticleDetailPage({ params }: { params: { id: string } }
 
                 <Link href={`/compare/original/${article._id}`}>
                   <Button className="w-full gap-2 bg-primary hover:bg-primary/90">
-                  <BarChart3 className="h-4 w-4" />
-                  View Detailed Comparison
-                </Button>
-              </Link>
+                    <BarChart3 className="h-4 w-4" />
+                    View Detailed Comparison
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Sources */}
+          {article.metadata?.references && article.metadata.references.length > 0 && (
+            <div className="my-12 space-y-4">
+              <h3 className="text-xl font-bold text-foreground">Sources & References</h3>
+              <div className="grid gap-3">
+                {article.metadata.references.map((ref, index) => (
+                  <a
+                    key={index}
+                    href={ref.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-lg border border-border bg-card p-4 hover:border-primary hover:bg-card/80 transition-all"
+                  >
+                    <p className="font-medium text-foreground hover:text-primary">{ref.title}</p>
+                    <p className="text-xs text-muted-foreground truncate">{ref.url}</p>
+                  </a>
+                ))}
+              </div>
             </div>
           )}
-        </div>
-
-        {/* Sources */}
-        <div className="my-12 space-y-4">
-          <h3 className="text-xl font-bold text-foreground">Sources & References</h3>
-          <div className="grid gap-3">
-            {article.sources.map((source) => (
-              <a
-                key={source.url}
-                href={source.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-lg border border-border bg-card p-4 hover:border-primary hover:bg-card/80 transition-all"
-              >
-                <p className="font-medium text-foreground hover:text-primary">{source.title}</p>
-                <p className="text-xs text-muted-foreground truncate">{source.url}</p>
-              </a>
-            ))}
           </div>
         </div>
 
