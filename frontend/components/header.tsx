@@ -18,10 +18,10 @@ export default function Header() {
           <Link href="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Home
           </Link>
-          <Link href="/articles" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+          <Link href="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Articles
           </Link>
-          <Link href="/trending" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+          <Link href="/future-features" className="text-sm font-medium text-muted-foreground/60 hover:text-primary transition-colors">
             Trending
           </Link>
         </nav>
@@ -29,12 +29,12 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <div className="hidden gap-2 sm:flex">
-            <Link href="/auth/login">
+            <Link href="/future-features">
               <Button variant="ghost" size="sm">
                 Sign In
               </Button>
             </Link>
-            <Link href="/auth/signup">
+            <Link href="/future-features">
               <Button size="sm" className="bg-primary hover:bg-primary/90">
                 Get Started
               </Button>
