@@ -94,55 +94,6 @@ export default function ArticleDetailPage({ params }: { params: { id: string } }
   const wordCount = article.metadata?.wordCount 
     ? article.metadata.wordCount.toLocaleString()
     : "N/A"
-      <p>One of the most exciting developments is the shift toward edge AI—running AI models on local devices rather than relying solely on cloud computing. This approach offers several advantages: reduced latency, improved privacy, and lower operational costs.</p>
-      <p>In 2025, we'll see more devices equipped with dedicated AI processors, enabling complex AI tasks to be performed locally. This will be particularly important for applications that require real-time processing or handle sensitive data.</p>
-      
-      <h2>Multimodal AI Systems</h2>
-      <p>AI systems that can understand and process multiple types of data—text, images, video, and audio—are becoming increasingly sophisticated. These multimodal models are more powerful and versatile than single-modality systems, opening up new possibilities for AI applications.</p>
-      <p>From enhanced virtual assistants to more intuitive human-computer interfaces, multimodal AI will transform how we interact with technology in 2025 and beyond.</p>
-      
-      <h2>Conclusion</h2>
-      <p>The future of AI in 2025 looks incredibly promising. With advances in generative models, edge computing, and multimodal systems, we're entering a new era of artificial intelligence. The question is no longer whether AI will impact our lives, but how quickly we can adapt to these changes.</p>
-    `,
-    sources: [
-      { title: "Latest AI Research Findings", url: "https://example.com/ai-research" },
-      { title: "Industry Analysis Report", url: "https://example.com/industry-report" },
-      { title: "Expert Commentary", url: "https://example.com/expert-commentary" },
-    ],
-    enhancementDetails: {
-      originalWordCount: 2100,
-      enhancedWordCount: 2400,
-      readabilityImprovement: "23%",
-      newSectionsAdded: 2,
-      improvements: [
-        "Added comprehensive introduction section",
-        "Enhanced structure with better headings",
-        "Included practical examples and use cases",
-        "Improved flow and transitions between sections",
-        "Added call-to-action elements",
-      ],
-    },
-    relatedArticles: [
-      {
-        id: 2,
-        title: "Machine Learning Ethics in Practice",
-        excerpt: "Navigating responsible AI development",
-        tags: ["AI", "Ethics"],
-      },
-      {
-        id: 3,
-        title: "Building Custom AI Models",
-        excerpt: "A practical guide for developers",
-        tags: ["AI", "Development"],
-      },
-      {
-        id: 5,
-        title: "AI in Healthcare: Breakthrough Innovations",
-        excerpt: "How AI is transforming medical research",
-        tags: ["AI", "Healthcare"],
-      },
-    ],
-  }
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href)
