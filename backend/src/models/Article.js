@@ -111,7 +111,7 @@ const articleSchema = new Schema(
 // Indexes for performance
 articleSchema.index({ title: 'text', content: 'text' }); // Full-text search
 articleSchema.index({ publishedDate: -1 }); // Sort by date descending
-articleSchema.index({ url: 1 }); // Unique index
+// NOTE: url field already has unique:true which creates an index automatically
 articleSchema.index({ 'metadata.isAIGenerated': 1 }); // Filter by AI-generated
 articleSchema.index({ 'metadata.sourceType': 1 }); // Filter by source type
 articleSchema.index({ tags: 1 }); // Filter by tags

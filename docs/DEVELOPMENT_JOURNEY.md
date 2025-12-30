@@ -559,6 +559,52 @@ Always use real, public URLs for mock data when testing HTTP-dependent workflows
 
 **Phase 2 Status**: ✅ **COMPLETE** (Bug fixed, ready for production)
 
+### Mongoose Duplicate Index Warning Fixed (December 30, 2025)
+
+#### Problem:
+Mongoose warning on server startup:
+```
+Warning: Duplicate schema index on {"url":1} found. This is often due to declaring an index 
+using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+```
+
+#### Root Cause:
+In `backend/src/models/Article.js`:
+- Line 23: `url` field had `unique: true` (automatically creates an index)
+- Line 114: `articleSchema.index({ url: 1 })` (redundant index declaration)
+
+#### Solution:
+Removed the redundant index line:
+```javascript
+// BEFORE (Line 114 - REMOVED):
+articleSchema.index({ url: 1 }); // Unique index - DUPLICATE!
+
+// AFTER (Line 114):
+// NOTE: url field already has unique:true which creates an index automatically
+```
+
+#### Testing:
+```bash
+# Restarted backend server
+✅ No more Mongoose warnings
+✅ Server starts cleanly
+
+# Database was empty, re-scraped articles
+POST http://localhost:3000/api/articles/scrape
+Response: {"created":5,"duplicates":0} ✅
+
+# Verified articles restored
+GET http://localhost:3000/api/articles
+Response: 5 articles, all original (isAIGenerated: false) ✅
+```
+
+**Commits**:
+- Schema fix pending commit
+
+---
+
+**Phase 2 Status**: ✅ **COMPLETE** (All bugs fixed, fully tested)
+
 ---
 
 ## 🎨 PHASE 3: Frontend Application
