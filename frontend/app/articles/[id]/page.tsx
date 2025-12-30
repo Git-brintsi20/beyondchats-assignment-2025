@@ -53,10 +53,10 @@ export default function ArticleDetailPage({ params }: { params: { id: string } }
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 animate-in fade-in duration-300">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <span className="ml-2 text-muted-foreground">Loading article...</span>
+            <span className="ml-2 text-muted-foreground animate-pulse">Loading article...</span>
           </div>
         </main>
       </div>
@@ -67,14 +67,14 @@ export default function ArticleDetailPage({ params }: { params: { id: string } }
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 zoom-match-cut">
           <div className="rounded-lg border border-destructive bg-destructive/10 px-6 py-12 text-center">
             <h3 className="text-lg font-medium text-destructive">Article not found</h3>
             <p className="mt-1 text-sm text-muted-foreground">
               {error || 'The article you are looking for does not exist'}
             </p>
             <Link href="/">
-              <Button variant="outline" className="mt-4">
+              <Button variant="outline" className="mt-4 hover:scale-105 transition-transform">
                 Back to Home
               </Button>
             </Link>

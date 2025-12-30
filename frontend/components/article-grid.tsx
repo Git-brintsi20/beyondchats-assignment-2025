@@ -13,6 +13,7 @@ interface ArticleGridProps {
   page: number
   searchQuery: string
   filters: { source: string; sortBy: string }
+  onTotalPagesChange?: (total: number) => void
 }
 
 const mockArticles = [
@@ -126,11 +127,10 @@ const mockArticles = [
   },
 ]
 
-export default function ArticleGrid({ page, searchQuery, filters }: ArticleGridProps) {
+export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesChange }: ArticleGridProps) {
   const [articles, setArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [totalPages, setTotalPages] = useState(1)
 
   useEffect(() => {
     async function fetchArticles() {
@@ -159,6 +159,22 @@ export default function ArticleGrid({ page, searchQuery, filters }: ArticleGridP
         
         let fetchedArticles = response.articles
         
+        // Remove duplicate articles - if both original and enhanced exist, prefer enhanced
+        const uniqueArticles = new Map()
+        fetchedArticles.forEach(article => {
+          const key = article.title.toLowerCase().trim()
+          const existing = uniqueArticles.get(key)
+          
+          if (!existing) {
+            uniqueArticles.set(key, article)
+          } else if (article.metadata?.isAIGenerated && !existing.metadata?.isAIGenerated) {
+            // Prefer enhanced version over original
+            uniqueArticles.set(key, article)
+          }
+        })
+        
+        fetchedArticles = Array.from(uniqueArticles.values())
+        
         // Client-side tag filtering if needed
         if (filters.source !== "all") {
           fetchedArticles = fetchedArticles.filter(article => 
@@ -167,7 +183,7 @@ export default function ArticleGrid({ page, searchQuery, filters }: ArticleGridP
         }
         
         setArticles(fetchedArticles)
-        setTotalPages(response.pages)
+        onTotalPagesChange?.(Math.max(1, Math.ceil(fetchedArticles.length / 6)))
       } catch (err: any) {
         console.error('Failed to fetch articles:', err)
         setError(err.message || 'Failed to load articles')
@@ -181,9 +197,9 @@ export default function ArticleGrid({ page, searchQuery, filters }: ArticleGridP
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center py-12 animate-in fade-in duration-300">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-muted-foreground">Loading articles...</span>
+        <span className="ml-2 text-muted-foreground animate-pulse">Loading articles...</span>
       </div>
     )
   }
@@ -214,8 +230,8 @@ export default function ArticleGrid({ page, searchQuery, filters }: ArticleGridP
   }
 
   return (
-    <div className="fade-in-stagger grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {articles.map((article) => {
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {articles.map((article, index) => {
         const isEnhanced = article.metadata?.isAIGenerated || false
         const isUpdated = article.metadata?.lastAnalyzed ? true : false
         const readingTime = article.metadata?.readingTime 
@@ -226,33 +242,43 @@ export default function ArticleGrid({ page, searchQuery, filters }: ArticleGridP
           : format(new Date(article.scrapedAt), "MMM dd, yyyy")
         
         return (
-          <Link key={article._id} href={`/articles/${article._id}`}>
-            <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:shadow-primary/20 hover:scale-105 cursor-pointer">
+          <Link 
+            key={article._id} 
+            href={`/articles/${article._id}`}
+            className="animate-in fade-in slide-in-from-bottom-4 duration-500"
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
+            <Card className="group h-full overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] hover:-translate-y-1 cursor-pointer border-border/50">
               <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 h-48">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                 <img
                   src={article.thumbnail || "/placeholder.svg"}
                   alt={article.title}
-                  className="h-full w-full object-cover transition-transform group-hover:scale-110"
+                  className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
                 />
                 {(isEnhanced || isUpdated) && (
-                  <div className="absolute top-3 right-3 flex flex-col gap-2">
+                  <div className="absolute top-3 right-3 flex flex-col gap-2 z-20">
                     {isEnhanced && (
-                      <Badge className="bg-primary text-primary-foreground gap-1 flex items-center">
-                        <Sparkles className="h-3 w-3" />
+                      <Badge className="bg-primary text-primary-foreground gap-1 flex items-center animate-in slide-in-from-right duration-300 backdrop-blur-sm">
+                        <Sparkles className="h-3 w-3 animate-pulse" />
                         Enhanced
                       </Badge>
                     )}
-                    {isUpdated && <Badge variant="secondary">Updated</Badge>}
+                    {isUpdated && (
+                      <Badge variant="secondary" className="animate-in slide-in-from-right duration-300 backdrop-blur-sm" style={{ animationDelay: '100ms' }}>
+                        Updated
+                      </Badge>
+                    )}
                   </div>
                 )}
               </div>
 
               <div className="flex flex-col gap-4 p-5">
                 <div className="space-y-2">
-                  <h3 className="line-clamp-2 text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                  <h3 className="line-clamp-2 text-lg font-semibold text-foreground group-hover:text-primary transition-all duration-300 group-hover:translate-x-1">
                     {article.title}
                   </h3>
-                  <p className="line-clamp-2 text-sm text-muted-foreground">
+                  <p className="line-clamp-2 text-sm text-muted-foreground transition-all duration-300 group-hover:text-foreground/80">
                     {article.excerpt}
                   </p>
                 </div>
@@ -282,8 +308,9 @@ export default function ArticleGrid({ page, searchQuery, filters }: ArticleGridP
                   </div>
                 </div>
 
-                <Button variant="ghost" className="w-full gap-2 mt-auto text-primary">
-                  Read Article →
+                <Button variant="ghost" className="w-full gap-2 mt-auto text-primary group-hover:gap-4 transition-all duration-300 group-hover:bg-primary/10">
+                  Read Article 
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </Button>
               </div>
             </Card>
