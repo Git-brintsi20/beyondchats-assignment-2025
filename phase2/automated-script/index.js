@@ -102,14 +102,12 @@ async function processSingleArticle() {
         message: 'Select an article to process:',
         choices: originalArticles.map(article => ({
           name: `${article.title.substring(0, 60)}${article.title.length > 60 ? '...' : ''}`,
-          value: article._id
+          value: article.id
         }))
       }
     ]);
-
-    const selectedArticle = originalArticles.find(a => a._id === selectedArticleId);
     
-    console.log(chalk.cyan('\n🚀 Starting processing...\n'));
+    const selectedArticle = originalArticles.find(a => a.id === selectedArticleId);
     
     const result = await agent.processArticle(selectedArticle);
     
@@ -277,7 +275,7 @@ async function main() {
     spinner.succeed('Backend connected');
   } catch (error) {
     spinner.fail('Backend connection failed');
-    console.error(chalk.red(`\n❌ Cannot connect to backend at ${process.env.BACKEND_URL || 'http://localhost:3000'}`));
+    console.error(chalk.red(`\n❌ Cannot connect to backend at ${process.env.BACKEND_URL || 'http://localhost:8000'}`));
     console.log(chalk.yellow('\nPlease ensure the backend server is running.\n'));
     process.exit(1);
   }

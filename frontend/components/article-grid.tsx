@@ -16,116 +16,8 @@ interface ArticleGridProps {
   onTotalPagesChange?: (total: number) => void
 }
 
-const mockArticles = [
-  {
-    id: 1,
-    title: "The Future of AI: What to Expect in 2025",
-    excerpt: "Exploring emerging trends in artificial intelligence and machine learning",
-    author: "Sarah Chen",
-    date: "Dec 28, 2024",
-    readingTime: "8 min read",
-    image: "/ai-technology-future.png",
-    tags: ["AI", "Technology", "Future"],
-    isEnhanced: true,
-    isUpdated: false,
-  },
-  {
-    id: 2,
-    title: "Sustainable Business Practices",
-    excerpt: "How companies are adopting eco-friendly strategies for growth",
-    author: "Michael Rodriguez",
-    date: "Dec 27, 2024",
-    readingTime: "6 min read",
-    image: "/sustainable-business-green.png",
-    tags: ["Business", "Sustainability"],
-    isEnhanced: false,
-    isUpdated: true,
-  },
-  {
-    id: 3,
-    title: "Brain-Computer Interfaces: The Next Frontier",
-    excerpt: "Latest breakthroughs in neurotechnology and mind-machine interaction",
-    author: "Dr. Emily Watson",
-    date: "Dec 26, 2024",
-    readingTime: "10 min read",
-    image: "/brain-computer-interface-neural.jpg",
-    tags: ["Science", "Technology", "Neural"],
-    isEnhanced: true,
-    isUpdated: false,
-  },
-  {
-    id: 4,
-    title: "Remote Work: The Future is Hybrid",
-    excerpt: "Organizations navigating the evolving landscape of work-from-home policies",
-    author: "Jennifer Lee",
-    date: "Dec 25, 2024",
-    readingTime: "7 min read",
-    image: "/remote-work-hybrid-office.jpg",
-    tags: ["Work", "Business", "Culture"],
-    isEnhanced: false,
-    isUpdated: false,
-  },
-  {
-    id: 5,
-    title: "Mental Health in the Digital Age",
-    excerpt: "Understanding the impact of technology on our psychological wellbeing",
-    author: "Dr. James Park",
-    date: "Dec 24, 2024",
-    readingTime: "9 min read",
-    image: "/mental-health-digital-wellness.jpg",
-    tags: ["Wellness", "Health", "Mental"],
-    isEnhanced: true,
-    isUpdated: true,
-  },
-  {
-    id: 6,
-    title: "Quantum Computing Explained",
-    excerpt: "Breaking down the complexities of quantum technology for everyone",
-    author: "Prof. David Kumar",
-    date: "Dec 23, 2024",
-    readingTime: "12 min read",
-    image: "/quantum-computing.png",
-    tags: ["Science", "Technology", "Quantum"],
-    isEnhanced: false,
-    isUpdated: false,
-  },
-  {
-    id: 7,
-    title: "Climate Action: What Governments Are Doing",
-    excerpt: "Global initiatives and policies to combat climate change",
-    author: "Lisa Anderson",
-    date: "Dec 22, 2024",
-    readingTime: "7 min read",
-    image: "/climate-change-environment-green-earth.jpg",
-    tags: ["Environment", "Policy", "Sustainability"],
-    isEnhanced: true,
-    isUpdated: false,
-  },
-  {
-    id: 8,
-    title: "Cryptocurrency in 2025: Predictions and Insights",
-    excerpt: "What the blockchain industry might look like in the coming year",
-    author: "Alex Thompson",
-    date: "Dec 21, 2024",
-    readingTime: "8 min read",
-    image: "/cryptocurrency-blockchain-bitcoin.png",
-    tags: ["Finance", "Technology", "Crypto"],
-    isEnhanced: false,
-    isUpdated: true,
-  },
-  {
-    id: 9,
-    title: "The Art of Deep Work in a Distracted World",
-    excerpt: "Strategies to maintain focus and boost productivity",
-    author: "Dr. Marcus White",
-    date: "Dec 20, 2024",
-    readingTime: "6 min read",
-    image: "/productivity-focus-deep-work.jpg",
-    tags: ["Productivity", "Wellness", "Work"],
-    isEnhanced: true,
-    isUpdated: false,
-  },
-]
+// 6 articles per page
+const ITEMS_PER_PAGE = 6
 
 export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesChange }: ArticleGridProps) {
   const [articles, setArticles] = useState<Article[]>([])
@@ -140,15 +32,11 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
         
         const params: any = {
           page,
-          limit: 6,
+          limit: ITEMS_PER_PAGE,
         }
         
         if (searchQuery) {
           params.search = searchQuery
-        }
-        
-        if (filters.source !== "all") {
-          // Backend doesn't have tag filtering yet, we'll filter client-side
         }
         
         if (filters.sortBy) {
@@ -157,33 +45,34 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
         
         const response = await getAllArticles(params)
         
-        let fetchedArticles = response.articles
+        // --- DEBUGGING LOG ---
+        console.log("API Response:", response);
+        // ---------------------
+
+        // FIX 1: Check for 'data' (standard) OR 'articles'
+        let fetchedArticles = response.data || response.articles || []
         
-        // Remove duplicate articles - if both original and enhanced exist, prefer enhanced
-        const uniqueArticles = new Map()
-        fetchedArticles.forEach(article => {
-          const key = article.title.toLowerCase().trim()
-          const existing = uniqueArticles.get(key)
-          
-          if (!existing) {
-            uniqueArticles.set(key, article)
-          } else if (article.metadata?.isAIGenerated && !existing.metadata?.isAIGenerated) {
-            // Prefer enhanced version over original
-            uniqueArticles.set(key, article)
-          }
-        })
-        
-        fetchedArticles = Array.from(uniqueArticles.values())
-        
-        // Client-side tag filtering if needed
+        // Client-side tag filtering
         if (filters.source !== "all") {
-          fetchedArticles = fetchedArticles.filter(article => 
+          fetchedArticles = fetchedArticles.filter((article: Article) => 
             article.tags?.some(tag => tag.toLowerCase() === filters.source.toLowerCase())
           )
         }
         
         setArticles(fetchedArticles)
-        onTotalPagesChange?.(Math.max(1, Math.ceil(fetchedArticles.length / 6)))
+        
+        // FIX 2: robust total calculation
+        // Check response.pagination.total (your custom format) OR response.total (Laravel default)
+        const totalItems = response.pagination?.total || response.total || fetchedArticles.length || 0
+        const calculatedPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
+        
+        console.log(`Total Items: ${totalItems}, Calculated Pages: ${calculatedPages}`);
+
+        // Update parent
+        if (onTotalPagesChange) {
+          onTotalPagesChange(calculatedPages > 0 ? calculatedPages : 1)
+        }
+
       } catch (err: any) {
         console.error('Failed to fetch articles:', err)
         setError(err.message || 'Failed to load articles')
@@ -193,7 +82,7 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
     }
 
     fetchArticles()
-  }, [page, searchQuery, filters])
+  }, [page, searchQuery, filters, onTotalPagesChange])
 
   if (loading) {
     return (
@@ -209,13 +98,7 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
       <div className="rounded-lg border border-destructive bg-destructive/10 px-6 py-12 text-center">
         <h3 className="text-lg font-medium text-destructive">Failed to load articles</h3>
         <p className="mt-1 text-sm text-muted-foreground">{error}</p>
-        <Button 
-          variant="outline" 
-          className="mt-4"
-          onClick={() => window.location.reload()}
-        >
-          Retry
-        </Button>
+        <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>Retry</Button>
       </div>
     )
   }
@@ -234,38 +117,42 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
       {articles.map((article, index) => {
         const isEnhanced = article.metadata?.isAIGenerated || false
         const isUpdated = article.metadata?.lastAnalyzed ? true : false
-        const readingTime = article.metadata?.readingTime 
-          ? `${article.metadata.readingTime} min read` 
-          : "5 min read"
-        const formattedDate = article.publishedDate 
-          ? format(new Date(article.publishedDate), "MMM dd, yyyy")
-          : format(new Date(article.scrapedAt), "MMM dd, yyyy")
+        const readingTime = article.metadata?.readingTime ? `${article.metadata.readingTime} min read` : "5 min read"
+        
+        // Safely parse date
+        let formattedDate = "Recent";
+        try {
+            const dateStr = article.published_date || article.scraped_at || new Date().toISOString();
+            formattedDate = format(new Date(dateStr), "MMM dd, yyyy");
+        } catch (e) {
+            formattedDate = "Recent";
+        }
         
         return (
           <Link 
-            key={article._id} 
-            href={`/articles/${article._id}`}
+            key={article.id} 
+            href={`/articles/${article.id}`}
             className="animate-in fade-in slide-in-from-bottom-4 duration-500"
             style={{ animationDelay: `${index * 100}ms` }}
           >
-            <Card className={`group h-full overflow-hidden transition-all duration-300 hover:shadow-xl shadow-primary hover:scale-[1.02] hover:-translate-y-1 cursor-pointer border-border/50 zoom-match-cut stagger-${(index % 6) + 1}`}>
-              <div className="relative overflow-hidden gradient-ocean h-48">
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+            <Card className={`group h-full overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:scale-[1.03] hover:-translate-y-2 cursor-pointer border-2 border-border/60 hover:border-primary/40 zoom-match-cut stagger-${(index % 6) + 1} bg-card/95 backdrop-blur-sm`}>
+              <div className="relative overflow-hidden bg-gradient-to-br from-muted via-muted/80 to-muted/60 h-52">
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
                 <img
                   src={article.thumbnail || "/placeholder.svg"}
                   alt={article.title}
-                  className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-1 mix-blend-overlay opacity-80"
+                  className="h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.15] group-hover:rotate-2 brightness-100 group-hover:brightness-110"
                 />
                 {(isEnhanced || isUpdated) && (
-                  <div className="absolute top-3 right-3 flex flex-col gap-2 z-20">
+                  <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
                     {isEnhanced && (
-                      <Badge className="gradient-primary text-primary-foreground gap-1 flex items-center swipe-in-right glass border-0">
-                        <Sparkles className="h-3 w-3 animate-pulse" />
+                      <Badge className="gradient-primary text-primary-foreground gap-1.5 flex items-center swipe-in-right glass border-0 shadow-lg px-3 py-1">
+                        <Sparkles className="h-3.5 w-3.5 animate-pulse" />
                         Enhanced
                       </Badge>
                     )}
                     {isUpdated && (
-                      <Badge variant="secondary" className="swipe-in-right stagger-1 glass gradient-secondary text-secondary-foreground border-0">
+                      <Badge variant="secondary" className="swipe-in-right stagger-1 glass gradient-secondary text-secondary-foreground border-0 shadow-lg px-3 py-1">
                         Updated
                       </Badge>
                     )}
@@ -273,19 +160,19 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
                 )}
               </div>
 
-              <div className="flex flex-col gap-4 p-5">
+              <div className="flex flex-col gap-4 p-6">
                 <div className="space-y-2">
-                  <h3 className="line-clamp-2 text-lg font-semibold text-foreground group-hover:text-primary transition-all duration-300 group-hover:translate-x-1">
+                  <h3 className="line-clamp-2 text-lg font-bold text-foreground group-hover:text-primary transition-all duration-300 group-hover:translate-x-1 tracking-tight leading-tight">
                     {article.title}
                   </h3>
-                  <p className="line-clamp-2 text-sm text-muted-foreground transition-all duration-300 group-hover:text-foreground/80">
+                  <p className="line-clamp-3 text-sm text-muted-foreground/90 transition-all duration-500 group-hover:text-foreground/90 leading-relaxed">
                     {article.excerpt}
                   </p>
                 </div>
 
                 <div className="flex gap-2 flex-wrap">
                   {article.tags?.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs transition-smooth hover:scale-110 hover:border-primary">
+                    <Badge key={tag} variant="outline" className="text-xs font-medium transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary/10 hover:shadow-sm">
                       {tag}
                     </Badge>
                   ))}
@@ -308,9 +195,9 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
                   </div>
                 </div>
 
-                <Button variant="ghost" className="w-full gap-2 mt-auto text-primary group-hover:gap-4 transition-all duration-300 group-hover:bg-primary/10 hover-scale">
+                <Button variant="ghost" className="w-full gap-2 mt-auto text-primary font-semibold group-hover:gap-4 transition-all duration-500 group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-primary/80 hover-scale group-hover:text-primary-foreground group-hover:shadow-lg">
                   Read Article 
-                  <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  <span className="transition-transform duration-300 group-hover:translate-x-2 text-xl">→</span>
                 </Button>
               </div>
             </Card>

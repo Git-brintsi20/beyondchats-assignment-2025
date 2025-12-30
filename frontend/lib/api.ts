@@ -10,23 +10,25 @@ import axios, { AxiosInstance } from 'axios';
 
 // Types
 export interface Article {
-  _id: string;
+  id: number;  // Changed from _id to id for Laravel
   title: string;
   url: string;
   content: string;
   excerpt: string;
   author?: string;
-  publishedDate?: string;
+  published_date?: string;  // Laravel snake_case
   thumbnail?: string;
   tags?: string[];
-  scrapedAt: Date;
+  scraped_at?: string;  // Laravel snake_case
+  created_at?: string;
+  updated_at?: string;
   metadata?: {
     wordCount?: number;
     readingTime?: number;
     lastAnalyzed?: Date;
     similarityScore?: number;
     isAIGenerated?: boolean;
-    sourceType?: 'original' | 'enhanced' | 'competitor';
+    sourceType?: 'original' | 'enhanced' | 'competitor' | 'scraped';
     keywords?: string[];
     references?: Array<{ title: string; url: string }>;
   };
@@ -40,10 +42,16 @@ export interface Article {
 
 export interface ArticleListResponse {
   articles: Article[];
-  total: number;
-  pages: number;
-  currentPage: number;
-  limit: number;
+  pagination?: {
+    total: number;
+    pages: number;
+    current: number;
+    limit: number;
+  };
+  total?: number;
+  pages?: number;
+  currentPage?: number;
+  limit?: number;
 }
 
 // Backend API response wrapper
@@ -80,8 +88,8 @@ export interface ApiError {
   status?: number;
 }
 
-// API Client Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+// API Client Configuration - Laravel Backend ONLY
+const API_BASE_URL = 'http://localhost:8000/api';
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,

@@ -1,6 +1,6 @@
 # Phase 2: Automated Content Discovery Agent 🤖
 
-**Powered by Claude AI Sonnet 4**
+**Powered by Claude AI Sonnet 4.5**
 
 ## Overview
 
@@ -47,7 +47,7 @@ Copy `.env.example` to `.env` and configure:
 
 ```env
 # Backend API
-BACKEND_URL=http://localhost:3000
+BACKEND_URL=http://localhost:8000
 
 # Claude AI (optional for demo)
 ANTHROPIC_API_KEY=your_anthropic_api_key_here
@@ -241,7 +241,7 @@ npm start
 ### No Articles Found
 ```bash
 # Run scraper first
-curl http://localhost:3000/api/articles/scrape -X POST
+curl http://localhost:8000/api/articles/scrape -X POST
 ```
 
 ### API Key Issues

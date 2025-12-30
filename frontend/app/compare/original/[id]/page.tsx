@@ -78,7 +78,11 @@ The future of AI in 2025 looks incredibly promising. With advances in generative
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <Breadcrumb
-          items={[{ label: "Home", href: "/" }, { label: "Articles", href: "/articles" }, { label: "Comparison" }]}
+          items={[
+            { label: "Home", href: "/" }, 
+            { label: "Articles", href: `/articles/${id}` }, 
+            { label: "Comparison" }
+          ]}
         />
 
         {/* Header */}
@@ -250,7 +254,7 @@ The future of AI in 2025 looks incredibly promising. With advances in generative
 
         {/* Back Button */}
         <div className="mt-12 border-t border-border pt-8">
-          <Link href={`/articles/${params.id}`} className="flex items-center gap-2 text-primary hover:underline w-fit">
+          <Link href={`/articles/${id}`} className="flex items-center gap-2 text-primary hover:underline w-fit">
             <ArrowLeft className="h-4 w-4" />
             Back to Article
           </Link>

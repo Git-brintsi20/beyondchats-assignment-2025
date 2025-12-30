@@ -68,11 +68,11 @@
   /* Enhanced Dark Mode - Deep blue-blacks with vibrant accents */
   
   /* Backgrounds - Rich dark with subtle blue undertone */
-  --background: oklch(0.10 0.025 260);
+  --background: oklch(0.15 0.025 260);
   --foreground: oklch(0.97 0.01 260);
   
-  /* Cards - Elevated dark surfaces */
-  --card: oklch(0.16 0.03 260);
+  /* Cards - Elevated dark surfaces with better contrast */
+  --card: oklch(0.22 0.03 260);
   --card-foreground: oklch(0.97 0.01 260);
   
   /* Popovers - Overlay surfaces */
@@ -733,18 +733,7 @@
     animation: gradient-shift 4s ease infinite;
   }
 
-  @keyframes gradient-rotate {
-    0% {
-      filter: hue-rotate(0deg);
-    }
-    100% {
-      filter: hue-rotate(360deg);
-    }
-  }
-
-  .gradient-rotate {
-    animation: gradient-rotate 10s linear infinite;
-  }
+  /* Gradient rotate removed to preserve natural image colors */
 
   /* ========== PULSE & GLOW ========== */
   @keyframes pulse-glow {
@@ -848,5 +837,68 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+
+  /* Article Content Styling - Preserve original blog formatting */
+  .article-content {
+    @apply text-foreground/90;
+  }
+
+  .article-content h1,
+  .article-content h2,
+  .article-content h3,
+  .article-content h4,
+  .article-content h5,
+  .article-content h6 {
+    @apply font-bold text-foreground mt-8 mb-4;
+  }
+
+  .article-content h1 { @apply text-3xl; }
+  .article-content h2 { @apply text-2xl; }
+  .article-content h3 { @apply text-xl; }
+
+  .article-content p {
+    @apply mb-6 leading-8 text-base md:text-lg;
+  }
+
+  .article-content ul,
+  .article-content ol {
+    @apply my-6 ml-6 space-y-2;
+  }
+
+  .article-content ul li {
+    @apply list-disc;
+  }
+
+  .article-content ol li {
+    @apply list-decimal;
+  }
+
+  .article-content a {
+    @apply text-primary hover:underline;
+  }
+
+  .article-content strong {
+    @apply font-bold text-foreground;
+  }
+
+  .article-content em {
+    @apply italic;
+  }
+
+  .article-content blockquote {
+    @apply border-l-4 border-primary pl-4 italic my-6 text-muted-foreground;
+  }
+
+  .article-content code {
+    @apply bg-muted px-2 py-1 rounded text-sm font-mono;
+  }
+
+  .article-content pre {
+    @apply bg-muted p-4 rounded-lg overflow-x-auto my-6;
+  }
+
+  .article-content img {
+    @apply rounded-lg my-6 w-full;
   }
 }

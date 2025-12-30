@@ -87,9 +87,11 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const isEnhanced = article.metadata?.isAIGenerated || false
-  const formattedDate = article.publishedDate 
-    ? format(new Date(article.publishedDate), "MMMM dd, yyyy")
-    : format(new Date(article.scrapedAt), "MMMM dd, yyyy")
+  const formattedDate = article.published_date 
+    ? format(new Date(article.published_date), "MMMM dd, yyyy")
+    : article.scraped_at 
+      ? format(new Date(article.scraped_at), "MMMM dd, yyyy")
+      : format(new Date(), "MMMM dd, yyyy")
   const readingTime = article.metadata?.readingTime 
     ? `${article.metadata.readingTime} min read`
     : "5 min read"
@@ -119,14 +121,14 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
           {/* Hero Section */}
           <div className="mt-8 space-y-6">
             <div className="space-y-4">
-              <h1 className="zoom-match-cut text-4xl font-bold text-foreground sm:text-5xl leading-tight">{article.title}</h1>
+              <h1 className="zoom-match-cut text-4xl font-bold text-foreground sm:text-5xl leading-tight italic font-serif">{article.title}</h1>
               {article.excerpt && (
                 <p className="glide-in text-xl text-muted-foreground">{article.excerpt}</p>
               )}
             </div>
 
             {/* Article Image */}
-            <div className="relative h-96 w-full overflow-hidden rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 scale-in">
+            <div className="relative h-96 w-full overflow-hidden rounded-xl bg-gradient-to-br from-primary/30 to-secondary/30 border border-border/50 scale-in">
               <img 
                 src={article.thumbnail || "/placeholder.svg"} 
                 alt={article.title} 
@@ -209,11 +211,40 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
         </div>
 
         {/* Article Content */}
-        <article className="prose prose-invert max-w-none space-y-8 py-8 text-foreground glide-in">
-          <div className="space-y-6 leading-relaxed text-lg whitespace-pre-wrap">
-            {article.content}
-          </div>
-        </article>
+        <Card className="my-8 p-8 md:p-12 bg-card border-border glide-in">
+          <article className="prose prose-lg dark:prose-invert max-w-none">
+            <div className="space-y-6 leading-relaxed">
+              {article.content.split('\n\n').map((paragraph, idx) => {
+                const trimmed = paragraph.trim();
+                // Skip if empty or very short
+                if (!trimmed || trimmed.length < 5) return null;
+                
+                // --- FIXED DUPLICATE TITLE LOGIC ---
+                // Remove ALL non-alphanumeric chars (including spaces) for strict comparison
+                const cleanPara = trimmed.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const cleanTitle = article.title.toLowerCase().replace(/[^a-z0-9]/g, '');
+                
+                // 1. Exact match (ignoring spaces/grammar)
+                if (cleanPara === cleanTitle) return null;
+                
+                // 2. Substring match (e.g. "Title - By Author")
+                // Only if paragraph is relatively short (< 300 chars) to avoid hiding long intro paragraphs
+                if (cleanPara.length < 300) {
+                    if (cleanPara.includes(cleanTitle) || cleanTitle.includes(cleanPara)) {
+                        return null;
+                    }
+                }
+                // ------------------------------------
+
+                return (
+                  <p key={idx} className="text-foreground/90 text-base md:text-lg leading-8">
+                    {trimmed}
+                  </p>
+                );
+              })}
+            </div>
+          </article>
+        </Card>
 
         {/* AI Enhancement Section */}
         {isEnhanced && article.metadata && (
@@ -288,7 +319,7 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
                   </div>
                 )}
 
-                <Link href={`/compare/original/${article._id}`}>
+                <Link href={`/compare/original/${article.id}`}>
                   <Button className="w-full gap-2 bg-primary hover:bg-primary/90 hover-lift">
                     <BarChart3 className="h-4 w-4" />
                     View Detailed Comparison

@@ -112,7 +112,7 @@ class ContentDiscoveryAgent {
         }
       };
 
-      await this.database.updateArticle(article._id, updateData);
+      await this.database.updateArticle(article.id, updateData);
       console.log(`✓ Original article updated`);
 
       // Step 6: Create and publish new enhanced versions
@@ -129,10 +129,10 @@ class ContentDiscoveryAgent {
               content: newVersion.content,
               excerpt: newVersion.content.substring(0, 200) + '...',
               author: article.author,
-              publishedDate: article.publishedDate,
+              published_date: article.published_date,
               thumbnail: article.thumbnail,
               tags: [...(article.tags || []), ...newVersion.targetKeywords],
-              scrapedAt: new Date(),
+              scraped_at: new Date().toISOString(),
               metadata: {
                 wordCount: newVersion.content.split(/\s+/).length,
                 readingTime: Math.ceil(newVersion.content.split(/\s+/).length / 200),

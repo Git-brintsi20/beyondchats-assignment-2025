@@ -10,7 +10,7 @@ import axios from 'axios';
 
 class DatabaseService {
   constructor(baseUrl) {
-    this.baseUrl = baseUrl || process.env.BACKEND_API_URL || 'http://localhost:3000/api';
+    this.baseUrl = baseUrl || process.env.BACKEND_API_URL || 'http://localhost:8000/api';
     this.api = axios.create({
       baseURL: this.baseUrl,
       timeout: 30000,
