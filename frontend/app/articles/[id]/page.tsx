@@ -212,7 +212,7 @@ export default function ArticleDetailPage({ params }: { params: { id: string } }
 
         {/* AI Enhancement Section */}
         {isEnhanced && article.metadata && (
-          <div className="my-12 border-y border-border py-8">
+          <Card className="my-12 border-border p-6">
             <button
               onClick={() => setShowEnhancementDetails(!showEnhancementDetails)}
               className="flex w-full items-center justify-between rounded-lg border border-border bg-primary/5 p-4 hover:bg-primary/10 transition-colors"
@@ -231,7 +231,7 @@ export default function ArticleDetailPage({ params }: { params: { id: string } }
               )}
             </button>
 
-            {showEnhancementDetails && article.metadata && (
+            {showEnhancementDetails && (
               <div className="mt-4 space-y-6 animate-slide-up">
                 <div className="grid gap-4 sm:grid-cols-3">
                   <Card className="border-border bg-card p-4">
@@ -291,30 +291,8 @@ export default function ArticleDetailPage({ params }: { params: { id: string } }
                 </Link>
               </div>
             )}
-          </div>
-
-          {/* Sources */}
-          {article.metadata?.references && article.metadata.references.length > 0 && (
-            <div className="my-12 space-y-4">
-              <h3 className="text-xl font-bold text-foreground">Sources & References</h3>
-              <div className="grid gap-3">
-                {article.metadata.references.map((ref, index) => (
-                  <a
-                    key={index}
-                    href={ref.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block rounded-lg border border-border bg-card p-4 hover:border-primary hover:bg-card/80 transition-all"
-                  >
-                    <p className="font-medium text-foreground hover:text-primary">{ref.title}</p>
-                    <p className="text-xs text-muted-foreground truncate">{ref.url}</p>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-          </div>
-        </div>
+          </Card>
+        )}
 
         {/* Related Articles */}
         <div className="my-12 space-y-6">
