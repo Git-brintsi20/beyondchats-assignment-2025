@@ -556,6 +556,10 @@ VITE_API_URL=http://localhost:3000/api
 
 Use Framer Motion for animations, Lucide React for icons, follow the design system with primary color #4F46E5. Make it look professional and impressive for a job assignment!"**
 
----
+.first i willi finish the frontend part on v0 if u give a perfect promt for v0 for it to make a visually appealing and professional frontend with dark and light themes and to use good simple and creative animations , effects ..sliding effects , fading and gliding effects , transition effects 1. Zoom match cut
+2. Shape Morphing
+3.Swipe
+and so on famous transition effects but overall less loading time and good frontend perfect page to page transition too..make sure the add all the auth pages as required
 
-**Save this file and use it as your v0 prompt! Adjust based on v0's response and iterate.**
+
+
