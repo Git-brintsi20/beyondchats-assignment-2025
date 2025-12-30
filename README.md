@@ -1197,7 +1197,7 @@ If you have questions about this implementation:
 
 1. **Check Documentation**: Review the `docs/` folder for detailed guides
 2. **GitHub Issues**: Open an issue on the repository
-3. **Email**: Contact me directly at [your.email@example.com]
+3. **Email**: Contact me directly at [shiki2hustle@gmail.com]
 4. **LinkedIn**: Connect for professional discussion
 
 ---
