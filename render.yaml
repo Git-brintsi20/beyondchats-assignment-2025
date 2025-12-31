@@ -3,8 +3,8 @@ services:
     name: beyondchats-backend
     runtime: docker
     plan: free
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    dockerfilePath: ./backend-laravel/Dockerfile
+    dockerContext: ./backend-laravel
     
     envVars:
       - key: APP_NAME
