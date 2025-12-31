@@ -73,6 +73,6 @@ RUN echo '[supervisord]' > /etc/supervisord.conf && \
 # Expose port
 EXPOSE 8080
 
-# Start services - Force DB wipe and reseed on container start
-# Updated: Dec 31, 2025 - Clean database deployment
-CMD php artisan migrate:fresh --force && php artisan db:seed --force && supervisord -c /etc/supervisord.conf
+# Start services - Migration removed to prevent crash loop
+# Use /nuclear-reset-db route to manually trigger database wipe
+CMD supervisord -c /etc/supervisord.conf
