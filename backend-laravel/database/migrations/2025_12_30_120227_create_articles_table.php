@@ -22,19 +22,13 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('title')->index();
-            $table->string('url')->unique();
-            $table->text('content')->nullable();
-            $table->text('excerpt')->nullable();
-            $table->string('author')->nullable();
-            $table->timestamp('published_date')->nullable()->index();
-            $table->string('thumbnail')->nullable();
-            $table->json('tags')->nullable();
-            $table->json('metadata')->nullable(); // Stores wordCount, readingTime, similarityScore, etc.
+            $table->string('link')->nullable(); // Article source URL
+            $table->text('content');
             $table->timestamp('scraped_at')->useCurrent();
+            $table->boolean('is_enhanced')->default(false);
+            $table->foreignId('original_article_id')->nullable()->constrained('articles')->onDelete('cascade');
+            $table->json('enhancement_metadata')->nullable();
             $table->timestamps();
-            
-            // Full-text search is not supported by SQLite
-            // MySQL/PostgreSQL would use: $table->fullText(['title', 'content']);
         });
     }
 
