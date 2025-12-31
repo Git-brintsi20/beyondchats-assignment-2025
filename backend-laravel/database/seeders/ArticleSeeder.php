@@ -10,50 +10,34 @@ class ArticleSeeder extends Seeder
 {
     public function run(): void
     {
-        // Define the 5 oldest/core topics
+        // Helper to make fake paragraphs
+        $makeContent = function($topic, $isEnhanced) {
+            $prefix = $isEnhanced ? "AI-ENHANCED ANALYSIS: " : "";
+            $para1 = "{$prefix}This article explores the critical aspects of {$topic}. In recent years, we have seen significant shifts in how this technology impacts our daily lives. " . str_repeat("The industry is evolving rapidly. ", 4);
+            $para2 = "Experts suggest that understanding {$topic} is key to future success. Data shows a 40% increase in adoption rates. " . str_repeat("Innovation drives this growth. ", 4);
+            $para3 = "In conclusion, {$topic} remains a vital subject. We must adapt to these changes to stay competitive. " . str_repeat("Looking ahead, the future is bright. ", 3);
+            return $para1 . "\n\n" . $para2 . "\n\n" . $para3;
+        };
+
         $topics = [
-            [
-                'slug' => 'ai-healthcare',
-                'title' => 'AI in Healthcare',
-                'excerpt' => 'How AI is changing medicine.',
-                'image' => 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop'
-            ],
-            [
-                'slug' => 'future-finance',
-                'title' => 'The Future of Finance',
-                'excerpt' => 'Blockchain and AI in banking.',
-                'image' => 'https://images.unsplash.com/photo-1611974765270-ca1258634369?w=800&auto=format&fit=crop'
-            ],
-            [
-                'slug' => 'remote-work',
-                'title' => 'Remote Work Trends',
-                'excerpt' => 'The shift to working from home.',
-                'image' => 'https://images.unsplash.com/photo-1593642632823-8f78536788c6?w=800&auto=format&fit=crop'
-            ],
-            [
-                'slug' => 'green-energy',
-                'title' => 'Green Energy Solutions',
-                'excerpt' => 'Sustainable power for the future.',
-                'image' => 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&auto=format&fit=crop'
-            ],
-            [
-                'slug' => 'cyber-security',
-                'title' => 'Cyber Security Basics',
-                'excerpt' => 'Protecting your digital assets.',
-                'image' => 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&auto=format&fit=crop'
-            ]
+            ['slug' => 'ai-healthcare', 'title' => 'AI in Healthcare', 'image' => 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop'],
+            ['slug' => 'future-finance', 'title' => 'The Future of Finance', 'image' => 'https://images.unsplash.com/photo-1611974765270-ca1258634369?w=800&auto=format&fit=crop'],
+            ['slug' => 'remote-work', 'title' => 'Remote Work Trends', 'image' => 'https://images.unsplash.com/photo-1593642632823-8f78536788c6?w=800&auto=format&fit=crop'],
+            ['slug' => 'green-energy', 'title' => 'Green Energy Solutions', 'image' => 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&auto=format&fit=crop'],
+            ['slug' => 'cyber-security', 'title' => 'Cyber Security Basics', 'image' => 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&auto=format&fit=crop']
         ];
 
         foreach ($topics as $index => $topic) {
+            // Dates: 5 months ago, 4 months ago...
             $baseDate = Carbon::now()->subMonths(5 - $index);
 
-            // 1. Create ORIGINAL Article
+            // 1. Create ORIGINAL
             $original = Article::updateOrCreate(
                 ['url' => "https://beyondchats.com/blog/{$topic['slug']}"],
                 [
                     'title' => $topic['title'],
-                    'content' => "This is the original content for {$topic['title']}. It covers the basics of the topic but lacks depth and modern examples. ".str_repeat("Content filler text. ", 20),
-                    'excerpt' => $topic['excerpt'],
+                    'content' => $makeContent($topic['title'], false),
+                    'excerpt' => "An introduction to {$topic['title']} and its core concepts.",
                     'author' => 'BeyondChats',
                     'thumbnail' => $topic['image'],
                     'published_date' => $baseDate,
@@ -63,20 +47,20 @@ class ArticleSeeder extends Seeder
                 ]
             );
 
-            // 2. Create ENHANCED Article (Linked to Original)
+            // 2. Create ENHANCED
             Article::updateOrCreate(
                 ['url' => "https://beyondchats.com/blog/{$topic['slug']}-enhanced"],
                 [
                     'title' => "{$topic['title']} - Enhanced Guide",
-                    'content' => "This is the AI-Enhanced version of {$topic['title']}. It includes advanced statistics, recent case studies, and structured formatting. ".str_repeat("Advanced AI content. ", 30),
-                    'excerpt' => "AI-Enhanced: " . $topic['excerpt'],
+                    'content' => $makeContent($topic['title'], true),
+                    'excerpt' => "AI-Enhanced deep dive into {$topic['title']} with statistics.",
                     'author' => 'BeyondChats AI',
                     'thumbnail' => $topic['image'],
-                    'published_date' => $baseDate->addDay(),
+                    'published_date' => $baseDate->addHour(), // 1 hour after original
                     'scraped_at' => Carbon::now(),
                     'is_enhanced' => true,
                     'original_article_id' => $original->id,
-                    'metadata' => ['readingTime' => 8, 'wordCount' => 800, 'similarity_score' => 95],
+                    'metadata' => ['readingTime' => 8, 'wordCount' => 800],
                     'enhancement_metadata' => json_encode([
                         'similarity_score' => 95,
                         'model' => 'Claude 3.5 Sonnet',
