@@ -86,7 +86,7 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
     )
   }
 
-  const isEnhanced = article.metadata?.isAIGenerated || false
+  const isEnhanced = article.is_enhanced || article.metadata?.isAIGenerated || false
   const formattedDate = article.published_date 
     ? format(new Date(article.published_date), "MMMM dd, yyyy")
     : article.scraped_at 
@@ -150,7 +150,7 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
               <div className="space-y-1">
                 <p className="font-semibold text-foreground">{article.author || "Unknown Author"}</p>
                 <p className="text-sm text-muted-foreground">
-                  {article.metadata?.sourceType === 'enhanced' ? 'AI Enhanced Content' : 'Original Content'}
+                  {isEnhanced ? 'AI Enhanced Content' : 'Original Content'}
                 </p>
               </div>
             </div>
@@ -247,7 +247,7 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
         </Card>
 
         {/* AI Enhancement Section */}
-        {isEnhanced && article.metadata && (
+        {isEnhanced && (article.metadata || article.enhancement_metadata) && (
           <Card className="my-12 border-border p-6 zoom-match-cut">
             <button
               onClick={() => setShowEnhancementDetails(!showEnhancementDetails)}
@@ -273,24 +273,24 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
                   <Card className="border-border bg-card p-4 hover-lift transition-smooth">
                     <p className="text-xs font-medium text-muted-foreground">Word Count</p>
                     <p className="mt-2 text-2xl font-bold text-foreground">
-                      {article.metadata.wordCount || 'N/A'}
+                      {article.metadata?.wordCount || 'N/A'}
                     </p>
                   </Card>
                   <Card className="border-border bg-card p-4 hover-lift transition-smooth stagger-1">
                     <p className="text-xs font-medium text-muted-foreground">Reading Time</p>
                     <p className="mt-2 text-2xl font-bold text-foreground">
-                      {article.metadata.readingTime ? `${article.metadata.readingTime} min` : 'N/A'}
+                      {article.metadata?.readingTime ? `${article.metadata.readingTime} min` : 'N/A'}
                     </p>
                   </Card>
                   <Card className="border-border bg-card p-4 hover-lift transition-smooth stagger-2">
                     <p className="text-xs font-medium text-muted-foreground">Similarity Score</p>
                     <p className="mt-2 text-2xl font-bold text-primary">
-                      {article.metadata.similarityScore ? `${article.metadata.similarityScore}%` : 'N/A'}
+                      {(article.enhancement_metadata?.similarity_score || article.metadata?.similarityScore) ? `${Math.round((article.enhancement_metadata?.similarity_score || article.metadata?.similarityScore) * 100)}%` : 'N/A'}
                     </p>
                   </Card>
                 </div>
 
-                {article.metadata.keywords && article.metadata.keywords.length > 0 && (
+                {article.metadata?.keywords && article.metadata.keywords.length > 0 && (
                   <div className="space-y-3">
                     <h4 className="font-semibold text-foreground">Target Keywords</h4>
                     <div className="flex gap-2 flex-wrap">
@@ -303,11 +303,11 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
                   </div>
                 )}
 
-                {article.metadata.references && article.metadata.references.length > 0 && (
+                {(article.enhancement_metadata?.references || article.metadata?.references) && (
                   <div className="space-y-3">
                     <h4 className="font-semibold text-foreground">References</h4>
                     <ul className="space-y-2">
-                      {article.metadata.references.map((ref, index) => (
+                      {(article.enhancement_metadata?.references || article.metadata?.references || []).map((ref: any, index: number) => (
                         <li key={index} className="flex gap-2 text-sm">
                           <Check className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
                           <a href={ref.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
@@ -319,7 +319,7 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
                   </div>
                 )}
 
-                <Link href={`/compare/original/${article.id}`}>
+                <Link href={`/compare/original/${article.original_article_id || article.id}`}>
                   <Button className="w-full gap-2 bg-primary hover:bg-primary/90 hover-lift">
                     <BarChart3 className="h-4 w-4" />
                     View Detailed Comparison

@@ -122,7 +122,7 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {articles.map((article, index) => {
-        const isEnhanced = article.metadata?.isAIGenerated || false
+        const isEnhanced = article.is_enhanced || article.metadata?.isAIGenerated || false
         const isUpdated = article.metadata?.lastAnalyzed ? true : false
         const readingTime = article.metadata?.readingTime ? `${article.metadata.readingTime} min read` : "5 min read"
         
