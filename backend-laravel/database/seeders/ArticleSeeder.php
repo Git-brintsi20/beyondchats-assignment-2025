@@ -88,11 +88,9 @@ class ArticleSeeder extends Seeder
                 ]
             );
         }
-                    ])
-                ]
-            );
-        }
     }
+}
+
 }
 
                 ]),
