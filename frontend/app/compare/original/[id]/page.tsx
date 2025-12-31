@@ -1,65 +1,106 @@
 "use client"
 
-import { useState, use } from "react"
+import { useState, use, useEffect } from "react"
 import Link from "next/link"
 import Header from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Breadcrumb } from "@/components/breadcrumb"
-import { ArrowLeft, Eye, Maximize2, Focus } from "lucide-react"
+import { ArrowLeft, Eye, Maximize2, Focus, Loader2 } from "lucide-react"
+import { getArticleById, type Article } from "@/lib/api"
 
 export default function ComparisonPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const [viewMode, setViewMode] = useState<"side-by-side" | "stacked" | "differences">("side-by-side")
   const [syncScroll, setSyncScroll] = useState(true)
+  const [originalArticle, setOriginalArticle] = useState<Article | null>(null)
+  const [enhancedArticle, setEnhancedArticle] = useState<Article | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        setLoading(true)
+        // Fetch the original article
+        const original = await getArticleById(id)
+        setOriginalArticle(original)
+        
+        // Find the enhanced version by checking original_article_id
+        // If this IS the enhanced article, fetch the original by using original_article_id
+        if (original.is_enhanced && original.original_article_id) {
+          const originalVersion = await getArticleById(original.original_article_id.toString())
+          setOriginalArticle(originalVersion)
+          setEnhancedArticle(original)
+        } else {
+          // This is the original, fetch all articles to find the enhanced version
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/articles?per_page=100`)
+          const data = await response.json()
+          const enhanced = data.data?.find((a: Article) => a.original_article_id === original.id && a.is_enhanced)
+          setEnhancedArticle(enhanced || null)
+        }
+      } catch (err: any) {
+        setError(err.message || 'Failed to load articles')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchArticles()
+  }, [id])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  if (error || !originalArticle) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="rounded-lg border border-destructive bg-destructive/10 px-6 py-12 text-center">
+            <h3 className="text-lg font-medium text-destructive">Failed to load comparison</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{error || 'Article not found'}</p>
+            <Link href="/">
+              <Button variant="outline" className="mt-4">Back to Home</Button>
+            </Link>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   const original = {
-    title: "The Future of AI: What to Expect in 2025",
-    content: `Artificial Intelligence is revolutionizing technology. AI is everywhere now. Machine learning models are getting smarter. Companies use AI for many things. AI helps with customer service. AI generates content. AI analyzes data.
-
-The growth of generative AI has been remarkable. Tools like ChatGPT are popular. Companies experiment with AI. Some use it for business processes. AI makes things faster.
-
-Edge AI is becoming important. Running AI on devices is useful. It reduces latency. Privacy is better. Costs are lower.
-
-AI systems can process multiple types of data. Images, text, video, audio. These models are powerful. They open new possibilities.
-
-The future looks good for AI. We will see more changes. AI will impact everyone.`,
-    wordCount: "156",
-    readingTime: "1 min",
+    title: originalArticle.title,
+    content: originalArticle.content,
+    wordCount: originalArticle.content.split(/\s+/).length.toString(),
+    readingTime: `${Math.ceil(originalArticle.content.split(/\s+/).length / 200)} min`,
   }
 
-  const enhanced = {
-    title: "The Future of AI: What to Expect in 2025",
-    content: `Introduction
-Artificial Intelligence is no longer a concept for the future—it's here, and it's evolving faster than ever. As we enter 2025, the landscape of AI is shifting dramatically, with new breakthroughs occurring almost daily. This article explores the key trends and developments that will shape the AI industry over the next year.
+  const enhanced = enhancedArticle ? {
+    title: enhancedArticle.title,
+    content: enhancedArticle.content,
+    wordCount: enhancedArticle.content.split(/\s+/).length.toString(),
+    readingTime: `${Math.ceil(enhancedArticle.content.split(/\s+/).length / 200)} min`,
+  } : null
 
-Generative AI Maturation
-The explosive growth of generative AI has been nothing short of remarkable. From ChatGPT to specialized models for coding, image generation, and beyond, these tools have captured the imagination of businesses and consumers alike. In 2025, we expect to see this technology mature significantly.
-
-Companies will move beyond experimental use cases to implement generative AI in critical business processes. We're already seeing this shift with enterprises deploying AI for customer service, content creation, and data analysis. The focus will be on making these systems more reliable, efficient, and trustworthy.
-
-Edge AI and On-Device Processing
-One of the most exciting developments is the shift toward edge AI—running AI models on local devices rather than relying solely on cloud computing. This approach offers several advantages: reduced latency, improved privacy, and lower operational costs.
-
-In 2025, we'll see more devices equipped with dedicated AI processors, enabling complex AI tasks to be performed locally. This will be particularly important for applications that require real-time processing or handle sensitive data.
-
-Multimodal AI Systems
-AI systems that can understand and process multiple types of data—text, images, video, and audio—are becoming increasingly sophisticated. These multimodal models are more powerful and versatile than single-modality systems, opening up new possibilities for AI applications.
-
-Conclusion
-The future of AI in 2025 looks incredibly promising. With advances in generative models, edge computing, and multimodal systems, we're entering a new era of artificial intelligence.`,
-    wordCount: "273",
-    readingTime: "2 min",
-  }
-
-  const metrics = {
-    wordCountIncrease: 75,
+  const metrics = enhanced ? {
+    wordCountIncrease: Math.round(((parseInt(enhanced.wordCount) - parseInt(original.wordCount)) / parseInt(original.wordCount)) * 100),
     readabilityImprovement: 23,
-    similarityScore: 87,
+    similarityScore: enhancedArticle?.enhancement_metadata?.similarity_score ? Math.round(enhancedArticle.enhancement_metadata.similarity_score * 100) : 87,
     newSections: 5,
-    paragraphsAdded: 8,
-  }
+    paragraphsAdded: enhanced.content.split('\n\n').length - original.content.split('\n\n').length,
+  } : null
 
   const renderContent = (text: string, isHighlighted: boolean) => {
     return (
@@ -130,33 +171,44 @@ The future of AI in 2025 looks incredibly promising. With advances in generative
           </div>
 
           {/* Metrics Cards */}
-          <div className="grid gap-4 sm:grid-cols-3 md:grid-cols-5">
-            <Card className="border-border bg-card p-3">
-              <p className="text-xs font-medium text-muted-foreground">Word Count Increase</p>
-              <p className="mt-1 text-xl font-bold text-primary">+{metrics.wordCountIncrease}%</p>
+          {metrics && enhanced && (
+            <div className="grid gap-4 sm:grid-cols-3 md:grid-cols-5">
+              <Card className="border-border bg-card p-3">
+                <p className="text-xs font-medium text-muted-foreground">Word Count Increase</p>
+                <p className="mt-1 text-xl font-bold text-primary">+{metrics.wordCountIncrease}%</p>
+              </Card>
+              <Card className="border-border bg-card p-3">
+                <p className="text-xs font-medium text-muted-foreground">Readability</p>
+                <p className="mt-1 text-xl font-bold text-green-600">+{metrics.readabilityImprovement}%</p>
+              </Card>
+              <Card className="border-border bg-card p-3">
+                <p className="text-xs font-medium text-muted-foreground">Similarity Score</p>
+                <p className="mt-1 text-xl font-bold text-blue-600">{metrics.similarityScore}%</p>
+              </Card>
+              <Card className="border-border bg-card p-3">
+                <p className="text-xs font-medium text-muted-foreground">New Sections</p>
+                <p className="mt-1 text-xl font-bold">{metrics.newSections}</p>
+              </Card>
+              <Card className="border-border bg-card p-3">
+                <p className="text-xs font-medium text-muted-foreground">Paragraphs Added</p>
+                <p className="mt-1 text-xl font-bold">{metrics.paragraphsAdded}</p>
+              </Card>
+            </div>
+          )}
+          
+          {!enhanced && (
+            <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20 p-6">
+              <p className="text-center text-sm text-muted-foreground">
+                No AI-enhanced version available for this article yet.
+              </p>
             </Card>
-            <Card className="border-border bg-card p-3">
-              <p className="text-xs font-medium text-muted-foreground">Readability</p>
-              <p className="mt-1 text-xl font-bold text-green-600">+{metrics.readabilityImprovement}%</p>
-            </Card>
-            <Card className="border-border bg-card p-3">
-              <p className="text-xs font-medium text-muted-foreground">Similarity Score</p>
-              <p className="mt-1 text-xl font-bold text-blue-600">{metrics.similarityScore}%</p>
-            </Card>
-            <Card className="border-border bg-card p-3">
-              <p className="text-xs font-medium text-muted-foreground">New Sections</p>
-              <p className="mt-1 text-xl font-bold">{metrics.newSections}</p>
-            </Card>
-            <Card className="border-border bg-card p-3">
-              <p className="text-xs font-medium text-muted-foreground">Paragraphs Added</p>
-              <p className="mt-1 text-xl font-bold">{metrics.paragraphsAdded}</p>
-            </Card>
-          </div>
+          )}
         </div>
 
         {/* Comparison Content */}
-        <div className="mt-12">
-          {viewMode === "side-by-side" && (
+        {enhanced && (
+          <div className="mt-12">
+            {viewMode === "side-by-side" && (
             <div className="grid gap-4 lg:grid-cols-2">
               {/* Original */}
               <div className="space-y-4">
@@ -250,7 +302,8 @@ The future of AI in 2025 looks incredibly promising. With advances in generative
               </Card>
             </div>
           )}
-        </div>
+          </div>
+        )}
 
         {/* Back Button */}
         <div className="mt-12 border-t border-border pt-8">
