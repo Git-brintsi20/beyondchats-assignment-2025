@@ -62,8 +62,9 @@ class ArticleSeeder extends Seeder
                 echo "  Found paragraphs: " . count($paragraphs) . "\n";
                 
                 if (count($paragraphs) >= 3) {
-                    // Take first 8 paragraphs for good content length
-                    $content = implode("\n\n", array_slice($paragraphs, 0, 8));
+                    // Take ALL paragraphs to get full article content
+                    $content = implode("\n\n", $paragraphs);
+                    echo "  Content length: " . strlen($content) . " chars\n";
                 }
             } else {
                 echo "  No article content found\n";
