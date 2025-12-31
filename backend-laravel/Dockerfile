@@ -11,7 +11,8 @@ RUN apk add --no-cache \
     libxml2-dev \
     zip \
     nginx \
-    supervisor
+    supervisor \
+    postgresql-dev
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
