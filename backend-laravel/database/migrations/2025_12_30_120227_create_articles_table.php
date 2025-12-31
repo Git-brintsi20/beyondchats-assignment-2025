@@ -21,12 +21,12 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->index();
-            $table->string('link')->nullable(); // Article source URL
+            $table->text('title');
             $table->text('content');
-            $table->timestamp('scraped_at')->useCurrent();
+            $table->text('link')->nullable();
+            $table->timestamp('scraped_at')->nullable();
             $table->boolean('is_enhanced')->default(false);
-            $table->foreignId('original_article_id')->nullable()->constrained('articles')->onDelete('cascade');
+            $table->unsignedBigInteger('original_article_id')->nullable();
             $table->json('enhancement_metadata')->nullable();
             $table->timestamps();
         });
