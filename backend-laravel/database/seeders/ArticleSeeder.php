@@ -10,13 +10,18 @@ class ArticleSeeder extends Seeder
 {
     public function run(): void
     {
-        // Helper to make fake paragraphs
+        // Helper to make clean multi-paragraph content
         $makeContent = function($topic, $isEnhanced) {
             $prefix = $isEnhanced ? "AI-ENHANCED ANALYSIS: " : "";
-            $para1 = "{$prefix}This article explores the critical aspects of {$topic}. In recent years, we have seen significant shifts in how this technology impacts our daily lives. " . str_repeat("The industry is evolving rapidly. ", 4);
-            $para2 = "Experts suggest that understanding {$topic} is key to future success. Data shows a 40% increase in adoption rates. " . str_repeat("Innovation drives this growth. ", 4);
-            $para3 = "In conclusion, {$topic} remains a vital subject. We must adapt to these changes to stay competitive. " . str_repeat("Looking ahead, the future is bright. ", 3);
-            return $para1 . "\n\n" . $para2 . "\n\n" . $para3;
+            
+            $p1 = "{$prefix}This article explores the critical aspects of {$topic}. In recent years, we have seen significant shifts in how this technology impacts our daily lives. The industry is evolving rapidly, bringing both new opportunities and challenges for professionals in the field.";
+            
+            $p2 = "Experts suggest that understanding {$topic} is key to future success. Data shows a 40% increase in adoption rates over the last fiscal year. Innovation drives this growth, pushing boundaries of what was previously thought possible.";
+            
+            $p3 = "In conclusion, {$topic} remains a vital subject. We must adapt to these changes to stay competitive. Looking ahead, the future is bright for those who invest time in mastering these concepts.";
+            
+            // Crucial: Double newline for frontend splitting
+            return $p1 . "\n\n" . $p2 . "\n\n" . $p3;
         };
 
         $topics = [
@@ -28,7 +33,6 @@ class ArticleSeeder extends Seeder
         ];
 
         foreach ($topics as $index => $topic) {
-            // Dates: 5 months ago, 4 months ago...
             $baseDate = Carbon::now()->subMonths(5 - $index);
 
             // 1. Create ORIGINAL
@@ -56,18 +60,14 @@ class ArticleSeeder extends Seeder
                     'excerpt' => "AI-Enhanced deep dive into {$topic['title']} with statistics.",
                     'author' => 'BeyondChats AI',
                     'thumbnail' => $topic['image'],
-                    'published_date' => $baseDate->addHour(), // 1 hour after original
+                    'published_date' => $baseDate->addHour(),
                     'scraped_at' => Carbon::now(),
                     'is_enhanced' => true,
                     'original_article_id' => $original->id,
                     'metadata' => ['readingTime' => 8, 'wordCount' => 800],
                     'enhancement_metadata' => json_encode([
-                        'similarity_score' => 95,
-                        'model' => 'Claude 3.5 Sonnet',
-                        'references' => [
-                            ['title' => 'Reference 1', 'url' => 'https://google.com'],
-                            ['title' => 'Reference 2', 'url' => 'https://wikipedia.org']
-                        ]
+                        'similarity_score' => 0.95,
+                        'model' => 'Claude 3.5 Sonnet'
                     ])
                 ]
             );

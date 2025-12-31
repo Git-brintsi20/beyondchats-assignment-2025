@@ -22,6 +22,13 @@ export interface Article {
   scraped_at?: string;  // Laravel snake_case
   created_at?: string;
   updated_at?: string;
+  is_enhanced?: boolean | number;  // Laravel backend field
+  original_article_id?: number;  // Laravel backend field
+  enhancement_metadata?: {
+    similarity_score?: number;
+    model?: string;
+    references?: Array<{ title: string; url: string }>;
+  };
   metadata?: {
     wordCount?: number;
     readingTime?: number;

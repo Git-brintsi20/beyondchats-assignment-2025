@@ -56,8 +56,8 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
         console.log("API Response:", response);
         // ---------------------
 
-        // FIX 1: Check for 'data' (standard) OR 'articles'
-        let fetchedArticles = response.data || response.articles || []
+        // Get articles from response
+        let fetchedArticles = response.articles || []
         
         // Client-side tag filtering
         if (filters.source !== "all") {
