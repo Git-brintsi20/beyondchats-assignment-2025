@@ -74,4 +74,4 @@ RUN echo '[supervisord]' > /etc/supervisord.conf && \
 EXPOSE 8080
 
 # Start services
-CMD php artisan migrate --force && supervisord -c /etc/supervisord.conf
+CMD php artisan migrate --force && php artisan db:seed --force && supervisord -c /etc/supervisord.conf

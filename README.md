@@ -10,14 +10,19 @@
 [![Claude AI](https://img.shields.io/badge/Claude-Sonnet_4-6B46C1?style=for-the-badge&logo=anthropic&logoColor=white)](https://www.anthropic.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](./LICENSE)
 
-**A sophisticated three-phase system combining web scraping, AI-powered content enhancement, and modern frontend design**
+---
+
+## 🌐 Live Demo
+
+### 🎯 **[VIEW LIVE APPLICATION →](https://beyond-chats-asst-2025.vercel.app)**
+
+**Backend API:** [https://beyondchats-backend-31x1.onrender.com/api](https://beyondchats-backend-31x1.onrender.com/api)
+
+> ⚠️ **Note for Evaluators:** Backend hosted on Render's free tier may experience 50-second cold start delay on first request after inactivity. This is expected behavior and does not reflect application performance.
 
 ---
 
-## 🌐 Live Deployment
-
-**Frontend:** [https://beyond-chats-asst-2025.vercel.app](https://beyond-chats-asst-2025.vercel.app)  
-**Backend API:** [https://beyondchats-backend-31x1.onrender.com/api](https://beyondchats-backend-31x1.onrender.com/api)
+**A sophisticated three-phase system combining web scraping, AI-powered content enhancement, and modern frontend design**
 
 > **⚠️ Note for Evaluators:** Backend is hosted on Render's free tier, which spins down after inactivity. **First API request may take 50-60 seconds** to wake up the server. Subsequent requests will be instant. This cold start delay should not affect evaluation as it's a hosting limitation, not a code issue.
 
