@@ -52,7 +52,7 @@ class ArticleSeeder extends Seeder
             [
                 'title' => 'Introduction to AI and Machine Learning - Enhanced',
                 'content' => 'Artificial Intelligence (AI) and Machine Learning (ML) are revolutionizing industries worldwide with unprecedented capabilities. This comprehensive guide explores the fundamental concepts, applications, and future trends in AI/ML technology. Learn how these technologies are being applied in healthcare, finance, and more.',
-                'url' => 'https://beyondchats.com/blog/ai-introduction',
+                'url' => 'https://beyondchats.com/blog/ai-introduction-enhanced',
                 'scraped_at' => Carbon::now(),
                 'is_enhanced' => true,
                 'original_article_id' => 1,
@@ -69,7 +69,7 @@ class ArticleSeeder extends Seeder
             [
                 'title' => 'The Future of Cloud Computing - Enhanced',
                 'content' => 'Cloud computing continues to evolve with groundbreaking technologies and services. This enhanced article explores serverless architecture, edge computing, multi-cloud strategies, and the role of AI in cloud infrastructure. Discover how major cloud providers are shaping the future of digital transformation.',
-                'url' => 'https://beyondchats.com/blog/cloud-future',
+                'url' => 'https://beyondchats.com/blog/cloud-future-enhanced',
                 'scraped_at' => Carbon::now(),
                 'is_enhanced' => true,
                 'original_article_id' => 2,
@@ -86,7 +86,7 @@ class ArticleSeeder extends Seeder
             [
                 'title' => 'Web Development Best Practices 2025 - Enhanced',
                 'content' => 'Modern web development requires mastery of multiple frameworks, tools, and methodologies. This comprehensive guide covers React, Next.js, TypeScript, performance optimization, accessibility standards, and security best practices. Learn industry-standard patterns used by leading tech companies.',
-                'url' => 'https://beyondchats.com/blog/web-dev-practices',
+                'url' => 'https://beyondchats.com/blog/web-dev-practices-enhanced',
                 'scraped_at' => Carbon::now(),
                 'is_enhanced' => true,
                 'original_article_id' => 3,
@@ -103,7 +103,7 @@ class ArticleSeeder extends Seeder
             [
                 'title' => 'Cybersecurity Trends and Threats - Enhanced',
                 'content' => 'As technology advances rapidly, cybercriminals develop increasingly sophisticated attack methods. This enhanced guide covers zero-trust architecture, AI-powered threat detection, ransomware prevention, and emerging security frameworks. Stay ahead of threats with expert insights and real-world case studies.',
-                'url' => 'https://beyondchats.com/blog/cybersecurity-trends',
+                'url' => 'https://beyondchats.com/blog/cybersecurity-trends-enhanced',
                 'scraped_at' => Carbon::now(),
                 'is_enhanced' => true,
                 'original_article_id' => 4,
@@ -120,7 +120,7 @@ class ArticleSeeder extends Seeder
             [
                 'title' => 'Data Science and Analytics - Enhanced',
                 'content' => 'Data-driven decision making is crucial for modern businesses competing in the digital age. This comprehensive guide explores statistical methods, machine learning algorithms, data visualization techniques, and big data technologies. Learn how Fortune 500 companies leverage analytics for competitive advantage.',
-                'url' => 'https://beyondchats.com/blog/data-science',
+                'url' => 'https://beyondchats.com/blog/data-science-enhanced',
                 'scraped_at' => Carbon::now(),
                 'is_enhanced' => true,
                 'original_article_id' => 5,
