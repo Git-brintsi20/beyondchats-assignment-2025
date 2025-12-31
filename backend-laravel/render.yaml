@@ -4,21 +4,48 @@ services:
     runtime: php
     plan: free
     buildCommand: composer install --no-dev --optimize-autoloader
-    startCommand: php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT
+    startCommand: php artisan migrate --force
+    
     envVars:
       - key: APP_NAME
         value: BeyondChatsAPI
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        sync: false
+        generateValue: true
       - key: APP_DEBUG
         value: false
-      - key: DB_CONNECTION
-        value: pgsql
       - key: LOG_CHANNEL
         value: stderr
-      - key: SESSION_DRIVER
-        value: file
-      - key: CACHE_STORE
-        value: file
+      - key: DOCUMENT_ROOT
+        value: public
+      
+      # Database Configuration
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: beyondchats-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: beyondchats-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: beyondchats-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: beyondchats-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: beyondchats-db
+          property: password
+
+databases:
+  - name: beyondchats-db
+    plan: free
+    databaseName: beyondchats
+    user: beyondchats
