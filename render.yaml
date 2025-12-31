@@ -1,13 +1,10 @@
 services:
   - type: web
     name: beyondchats-backend
-    env: php
+    runtime: docker
     plan: free
-    # Installs dependencies
-    buildCommand: composer install --no-dev --optimize-autoloader
-    
-    # Runs migrations. Render automatically starts Nginx/PHP after this finishes.
-    startCommand: php artisan migrate --force
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     
     envVars:
       - key: APP_NAME
@@ -20,12 +17,10 @@ services:
         value: false
       - key: LOG_CHANNEL
         value: stderr
-      
-      # IMPORTANT: Points Render to the correct folder
       - key: DOCUMENT_ROOT
         value: public
-
-      # Database Linking
+      
+      # Database Configuration
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
