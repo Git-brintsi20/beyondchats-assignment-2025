@@ -214,16 +214,24 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
         <Card className="my-8 p-8 md:p-12 bg-card border-border glide-in">
           <article className="prose prose-lg dark:prose-invert max-w-none">
             <div className="space-y-6 leading-relaxed">
-              {article.content.split('\n\n').map((paragraph, idx) => {
-                const trimmed = paragraph.trim();
-                if (!trimmed || trimmed.length < 10) return null;
-                
-                return (
-                  <p key={idx} className="text-foreground/90 text-base md:text-lg leading-8">
-                    {trimmed}
-                  </p>
-                );
-              })}
+              {article.content ? (
+                // Split by double newline (standard) OR multiple newlines
+                article.content.split(/\n\s*\n/).map((paragraph, idx) => {
+                  const trimmed = paragraph.trim();
+                  
+                  // Only skip completely empty strings. 
+                  // REMOVED the "length < 10" check so short sentences still show.
+                  if (!trimmed) return null;
+                  
+                  return (
+                    <p key={idx} className="text-foreground/90 text-base md:text-lg leading-8">
+                      {trimmed}
+                    </p>
+                  );
+                })
+              ) : (
+                <p className="text-muted-foreground italic">No content available.</p>
+              )}
             </div>
           </article>
         </Card>
