@@ -12,7 +12,16 @@
 
 **A sophisticated three-phase system combining web scraping, AI-powered content enhancement, and modern frontend design**
 
-[Live Demo](https://beyond-chats-asst-2025.vercel.app) • [Documentation](#-documentation) • [Installation](#-quick-start) • [API Reference](#-api-documentation)
+---
+
+## 🌐 Live Deployment
+
+**Frontend:** [https://beyond-chats-asst-2025.vercel.app](https://beyond-chats-asst-2025.vercel.app)  
+**Backend API:** [https://beyondchats-backend-31x1.onrender.com/api](https://beyondchats-backend-31x1.onrender.com/api)
+
+> **⚠️ Note for Evaluators:** Backend is hosted on Render's free tier, which spins down after inactivity. **First API request may take 50-60 seconds** to wake up the server. Subsequent requests will be instant. This cold start delay should not affect evaluation as it's a hosting limitation, not a code issue.
+
+[Documentation](#-documentation) • [Installation](#-quick-start) • [API Reference](#-api-documentation)
 
 </div>
 
@@ -113,9 +122,9 @@ This full-stack application demonstrates advanced web development capabilities t
 - 🚀 **Scalable Architecture**: Clean separation of concerns with modern tech stack
 - 📝 **Comprehensive Documentation**: Enterprise-level documentation for all phases
 
-**Assignment Context:** BeyondChats Full Stack Developer Position  
-**Development Period:** December 2025  
-**Status:** ✅ Complete (3/3 phases) - Deployed and Live
+**Assignment:** BeyondChats Full Stack Developer Position  
+**Completed:** December 2025  
+**Status:** ✅ All 3 Phases Complete - Live & Deployed
 
 ---
 
