@@ -22,12 +22,18 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->text('title');
-            $table->text('content');
-            $table->text('link')->nullable();
-            $table->timestamp('scraped_at')->nullable();
+            $table->longText('content');
+            $table->text('url')->unique();
+            $table->text('excerpt')->nullable();
+            $table->string('author')->nullable();
+            $table->text('thumbnail')->nullable();
+            $table->timestamp('published_date')->nullable();
+            $table->json('tags')->nullable();
+            $table->json('metadata')->nullable();
             $table->boolean('is_enhanced')->default(false);
             $table->unsignedBigInteger('original_article_id')->nullable();
             $table->json('enhancement_metadata')->nullable();
+            $table->timestamp('scraped_at')->nullable();
             $table->timestamps();
         });
     }

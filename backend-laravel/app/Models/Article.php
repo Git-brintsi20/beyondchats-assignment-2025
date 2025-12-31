@@ -25,12 +25,17 @@ class Article extends Model
         'thumbnail',
         'tags',
         'metadata',
-        'scraped_at'
+        'scraped_at',
+        'is_enhanced',
+        'original_article_id',
+        'enhancement_metadata'
     ];
 
     protected $casts = [
         'tags' => 'array',
         'metadata' => 'array',
+        'enhancement_metadata' => 'array',
+        'is_enhanced' => 'boolean',
         'published_date' => 'datetime',
         'scraped_at' => 'datetime',
     ];
