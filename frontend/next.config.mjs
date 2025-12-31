@@ -14,6 +14,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'beyondchats.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.beyondchats.com',
+      },
     ],
   },
 }

@@ -215,13 +215,17 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
           <article className="prose prose-lg dark:prose-invert max-w-none">
             <div className="space-y-6 leading-relaxed">
               {article.content ? (
-                // Split by double newline (standard) OR multiple newlines
-                article.content.split(/\n\s*\n/).map((paragraph, idx) => {
+                // Split by any newline pattern to show ALL content
+                article.content.split(/\n+/).map((paragraph, idx) => {
                   const trimmed = paragraph.trim();
                   
-                  // Only skip completely empty strings. 
-                  // REMOVED the "length < 10" check so short sentences still show.
+                  // Skip only empty strings
                   if (!trimmed) return null;
+                  
+                  // Skip duplicate title at the beginning
+                  if (idx === 0 && trimmed.toLowerCase() === article.title.toLowerCase()) {
+                    return null;
+                  }
                   
                   return (
                     <p key={idx} className="text-foreground/90 text-base md:text-lg leading-8">
