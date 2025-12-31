@@ -67,13 +67,13 @@ class ArticleSeeder extends Seeder
 
     public function run(): void
     {
-        // REAL BeyondChats blog URLs - update these with actual article URLs
+        // REAL BeyondChats blog URLs from their actual blog
         $urls = [
-            'https://beyondchats.com/blog/ai-customer-support',
-            'https://beyondchats.com/blog/chatbot-automation',
-            'https://beyondchats.com/blog/customer-experience',
-            'https://beyondchats.com/blog/ai-integration',
-            'https://beyondchats.com/blog/business-automation',
+            'https://beyondchats.com/blogs/choosing-the-right-ai-chatbot-a-guide/',
+            'https://beyondchats.com/blogs/should-you-trust-ai-in-healthcare/',
+            'https://beyondchats.com/blogs/why-we-are-building-yet-another-ai-chatbot/',
+            'https://beyondchats.com/blogs/will-ai-understand-the-complexities-of-patient-care/',
+            'https://beyondchats.com/blogs/your-website-needs-a-receptionist/',
         ];
 
         $fallbackArticles = [
