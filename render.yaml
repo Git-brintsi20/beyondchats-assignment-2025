@@ -1,7 +1,7 @@
 services:
   - type: web
     name: beyondchats-backend
-    runtime: php
+    env: php
     plan: free
     # Installs dependencies
     buildCommand: composer install --no-dev --optimize-autoloader
