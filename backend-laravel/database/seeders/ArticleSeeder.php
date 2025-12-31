@@ -14,7 +14,10 @@ class ArticleSeeder extends Seeder
     {
         try {
             $response = Http::timeout(15)->get($url);
-            if (!$response->successful()) return null;
+            if (!$response->successful()) {
+                echo "  HTTP {$response->status()}\n";
+                return null;
+            }
             
             $crawler = new Crawler($response->body());
             
@@ -22,6 +25,7 @@ class ArticleSeeder extends Seeder
             $title = null;
             if ($crawler->filter('h1')->count() > 0) {
                 $title = trim($crawler->filter('h1')->first()->text());
+                echo "  Found title: " . substr($title, 0, 50) . "...\n";
             }
             
             // Extract featured/main image - BeyondChats uses wp-content uploads
@@ -30,7 +34,10 @@ class ArticleSeeder extends Seeder
                 $src = $crawler->filter('img[src*="wp-content"]')->first()->attr('src');
                 if ($src) {
                     $image = str_starts_with($src, 'http') ? $src : 'https://beyondchats.com' . $src;
+                    echo "  Found image: Yes\n";
                 }
+            } else {
+                echo "  Found image: No\n";
             }
             
             // Extract article content - get ALL paragraphs from article body
@@ -52,14 +59,20 @@ class ArticleSeeder extends Seeder
                     });
                 
                 $paragraphs = array_filter($paragraphs);
+                echo "  Found paragraphs: " . count($paragraphs) . "\n";
                 
                 if (count($paragraphs) >= 3) {
                     // Take first 8 paragraphs for good content length
                     $content = implode("\n\n", array_slice($paragraphs, 0, 8));
                 }
+            } else {
+                echo "  No article content found\n";
             }
             
-            if (!$title || !$content) return null;
+            if (!$title || !$content) {
+                echo "  Incomplete data (title: " . ($title ? "yes" : "no") . ", content: " . ($content ? "yes" : "no") . ")\n";
+                return null;
+            }
             
             return [
                 'title' => $title,
@@ -67,7 +80,7 @@ class ArticleSeeder extends Seeder
                 'image' => $image,
             ];
         } catch (\Exception $e) {
-            echo "Error: " . $e->getMessage() . "\n";
+            echo "  Error: " . $e->getMessage() . "\n";
             return null;
         }
     }
@@ -96,14 +109,15 @@ class ArticleSeeder extends Seeder
             $scraped = $this->scrapeArticle($url);
             $baseDate = Carbon::now()->subMonths(5 - $index);
             
-            if ($scraped) {
+            if ($scraped && !empty($scraped['content']) && !empty($scraped['title'])) {
                 // Use scraped data
+                echo "✓ Scraped successfully: {$scraped['title']}\n";
                 $title = $scraped['title'];
                 $content = $scraped['content'];
                 $image = $scraped['image'] ?? $fallbackArticles[$index]['image'];
             } else {
                 // Use fallback
-                echo "Failed to scrape, using fallback data\n";
+                echo "✗ Failed to scrape, using fallback data\n";
                 $fallback = $fallbackArticles[$index];
                 $title = $fallback['title'];
                 $content = "This comprehensive article explores {$fallback['title']} in detail. Understanding these concepts is crucial for modern businesses looking to stay competitive in the digital age.\n\nWe examine the latest trends, best practices, and real-world implementations. Industry experts share their insights on how organizations can leverage these technologies effectively.\n\nThe future of business automation and AI integration continues to evolve rapidly. Companies that embrace these changes early will gain significant advantages in efficiency, customer satisfaction, and market positioning.";
