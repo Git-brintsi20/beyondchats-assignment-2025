@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use App\Models\Article;
 use Carbon\Carbon;
 
+// Force redeploy - Updated Dec 31, 2025
+
 class ArticleSeeder extends Seeder
 {
     public function run(): void
