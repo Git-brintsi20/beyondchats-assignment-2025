@@ -16,31 +16,31 @@ class ArticleSeeder extends Seeder
             [
                 'url' => 'https://beyondchats.com/blogs/choosing-the-right-ai-chatbot-a-guide/',
                 'fallback_title' => 'Choosing the right AI chatbot: A Guide',
-                'fallback_image' => 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800',
+                'fallback_image' => 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop&q=80',
                 'fallback_content' => "Selecting the ideal AI chatbot for your business is more than just a technical decision; it's a strategic move that impacts customer satisfaction and operational efficiency.\n\nFirst, define your primary goals. Are you looking to automate customer support, generate leads, or facilitate e-commerce transactions? Understanding your 'why' is the first step to success.\n\nKey features to look for include Natural Language Processing (NLP) capabilities, omnichannel support, and seamless integration with your existing CRM. A chatbot that cannot understand context or nuance will only frustrate your users.\n\nFinally, consider scalability. As your business grows, your AI solution should be able to handle increased traffic without compromising performance. Look for providers that offer robust analytics to track performance and user engagement."
             ],
             [
                 'url' => 'https://beyondchats.com/blogs/should-you-trust-ai-in-healthcare/',
                 'fallback_title' => 'Should you trust AI in healthcare?',
-                'fallback_image' => 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800',
+                'fallback_image' => 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=80',
                 'fallback_content' => "The integration of Artificial Intelligence in healthcare has sparked a global debate about trust, ethics, and efficacy. AI algorithms are now capable of diagnosing diseases with accuracy that rivals human specialists.\n\nHowever, the 'black box' nature of some deep learning models raises concerns. If a machine makes a diagnosis, can it explain why? Explainable AI (XAI) is becoming a crucial field of study to address this specific issue.\n\nMoreover, data privacy is paramount. Patient records are sensitive, and AI systems must adhere to strict HIPAA and GDPR regulations. Despite these challenges, the potential for AI to democratize access to healthcare and reduce human error is undeniable."
             ],
             [
                 'url' => 'https://beyondchats.com/blogs/why-we-are-building-yet-another-ai-chatbot/',
                 'fallback_title' => 'Why we are building yet another AI Chatbot',
-                'fallback_image' => 'https://images.unsplash.com/photo-1596558450255-7c0baff3412c?w=800',
+                'fallback_image' => 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&auto=format&fit=crop&q=80',
                 'fallback_content' => "In a market saturated with conversational AI tools, why introduce another one? The answer lies in the gap between 'functioning' chatbots and 'truly helpful' assistants.\n\nExisting solutions often struggle with context retention and personality consistency. Our approach focuses on Large Language Models (LLMs) that prioritize memory and empathy.\n\nWe believe the future of communication is not just about answering questions, but about building relationships. By leveraging advanced transformers, we aim to create an experience that feels less like a script and more like a conversation."
             ],
             [
                 'url' => 'https://beyondchats.com/blogs/will-ai-understand-the-complexities-of-patient-care/',
                 'fallback_title' => 'Will AI Understand the Complexities of Patient Care?',
-                'fallback_image' => 'https://images.unsplash.com/photo-1516549655169-df83a0833860?w=800',
+                'fallback_image' => 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&auto=format&fit=crop&q=80',
                 'fallback_content' => "Patient care is not binary. It involves empathy, intuition, and an understanding of human psychology that machines have historically lacked. Can code ever truly care?\n\nRecent advancements in Affective Computing allow AI to detect emotion in voice and text. This suggests a future where AI assistants can identify a distressed patient and escalate their case immediately.\n\nHowever, the human touch remains irreplaceable. AI should be viewed as a powerful tool to augment medical professionals, removing administrative burdens so doctors can focus on what they do best: caring for patients."
             ],
             [
                 'url' => 'https://beyondchats.com/blogs/your-website-needs-a-receptionist/',
                 'fallback_title' => 'Your website needs a receptionist',
-                'fallback_image' => 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800',
+                'fallback_image' => 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80',
                 'fallback_content' => "Your website is your digital storefront. If a customer walks in and no one is there to greet them, they leave. The same applies online.\n\nAn AI receptionist works 24/7, greeting visitors, answering FAQs, and booking appointments while your team sleeps. It reduces bounce rates and increases conversion instantly.\n\nImplementing a digital receptionist is the most cost-effective way to improve user experience. It ensures that every visitor feels heard and valued, turning passive traffic into active leads."
             ]
         ];
