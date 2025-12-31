@@ -203,26 +203,28 @@ class ScrapeArticles extends Command
                     $wordCount = str_word_count($content);
                     $readingTime = ceil($wordCount / 200);
                     
-                    // Create article
-                    $article = Article::create([
-                        'title' => $articleData['title'],
-                        'url' => $articleData['url'],
-                        'content' => $content,
-                        'excerpt' => $articleData['excerpt'],
-                        'author' => 'BeyondChats',
-                        'published_date' => $publishedDate,
-                        'thumbnail' => $articleData['thumbnail'],
-                        'tags' => ['scraped', 'beyondchats'],
-                        'metadata' => [
-                            'sourceType' => 'scraped',
-                            'wordCount' => $wordCount,
-                            'readingTime' => $readingTime,
-                            'scrapedFrom' => 'https://beyondchats.com/blogs/',
-                        ],
-                        'scraped_at' => now(),
-                    ]);
+                    // Create or update article
+                    Article::updateOrCreate(
+                        ['url' => $articleData['url']], // Check this URL
+                        [
+                            'title' => $articleData['title'],
+                            'content' => $content,
+                            'excerpt' => $articleData['excerpt'],
+                            'author' => 'BeyondChats',
+                            'published_date' => $publishedDate,
+                            'thumbnail' => $articleData['thumbnail'],
+                            'tags' => ['scraped', 'beyondchats'],
+                            'metadata' => [
+                                'sourceType' => 'scraped',
+                                'wordCount' => $wordCount,
+                                'readingTime' => $readingTime,
+                                'scrapedFrom' => 'https://beyondchats.com/blogs/',
+                            ],
+                            'scraped_at' => now(),
+                        ]
+                    );
                     
-                    $this->info("✓ Saved: {$articleData['title']}");
+                    $this->info("✓ Saved/Updated: {$articleData['title']}");
                     $saved++;
                 } else {
                     $this->error("Failed to fetch: {$articleData['url']}");
