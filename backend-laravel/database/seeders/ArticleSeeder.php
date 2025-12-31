@@ -18,38 +18,44 @@ class ArticleSeeder extends Seeder
             
             $crawler = new Crawler($response->body());
             
-            // Try to extract title
+            // Extract title
             $title = null;
             if ($crawler->filter('h1')->count() > 0) {
                 $title = trim($crawler->filter('h1')->first()->text());
-            } elseif ($crawler->filter('title')->count() > 0) {
-                $title = trim($crawler->filter('title')->first()->text());
             }
             
-            // Try to extract main content
-            $content = '';
-            $selectors = ['article p', '.post-content p', '.content p', 'main p', 'p'];
-            foreach ($selectors as $selector) {
-                if ($crawler->filter($selector)->count() > 2) {
-                    $paragraphs = $crawler->filter($selector)->each(fn($node) => trim($node->text()));
-                    $paragraphs = array_filter($paragraphs, fn($p) => strlen($p) > 50);
-                    if (count($paragraphs) >= 3) {
-                        $content = implode("\n\n", array_slice($paragraphs, 0, 5));
-                        break;
-                    }
+            // Extract featured/main image - BeyondChats uses wp-content uploads
+            $image = null;
+            if ($crawler->filter('img[src*="wp-content"]')->count() > 0) {
+                $src = $crawler->filter('img[src*="wp-content"]')->first()->attr('src');
+                if ($src) {
+                    $image = str_starts_with($src, 'http') ? $src : 'https://beyondchats.com' . $src;
                 }
             }
             
-            // Try to extract image
-            $image = null;
-            $imageSelectors = ['article img', '.post-thumbnail img', 'main img', 'img'];
-            foreach ($imageSelectors as $selector) {
-                if ($crawler->filter($selector)->count() > 0) {
-                    $src = $crawler->filter($selector)->first()->attr('src');
-                    if ($src && (str_starts_with($src, 'http') || str_starts_with($src, '//'))) {
-                        $image = $src;
-                        break;
-                    }
+            // Extract article content - get ALL paragraphs from article body
+            $content = '';
+            $paragraphs = [];
+            
+            // BeyondChats blog structure: look for article content
+            if ($crawler->filter('article p, .entry-content p, .post-content p')->count() > 0) {
+                $paragraphs = $crawler->filter('article p, .entry-content p, .post-content p')
+                    ->each(function($node) {
+                        $text = trim($node->text());
+                        // Filter out very short paragraphs, navigation, and form text
+                        if (strlen($text) > 80 && 
+                            !str_contains($text, 'Your email address will not be published') &&
+                            !str_contains($text, 'Required fields are marked')) {
+                            return $text;
+                        }
+                        return null;
+                    });
+                
+                $paragraphs = array_filter($paragraphs);
+                
+                if (count($paragraphs) >= 3) {
+                    // Take first 8 paragraphs for good content length
+                    $content = implode("\n\n", array_slice($paragraphs, 0, 8));
                 }
             }
             
@@ -61,6 +67,7 @@ class ArticleSeeder extends Seeder
                 'image' => $image,
             ];
         } catch (\Exception $e) {
+            echo "Error: " . $e->getMessage() . "\n";
             return null;
         }
     }
