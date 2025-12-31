@@ -59,9 +59,12 @@ class ArticleSeeder extends Seeder
         $url = $data['url'];
         $content = "";
         $title = $data['fallback_title'];
-        $thumbnail = $data['fallback_image'];
+        
+        // 1. ALWAYS USE THE RELIABLE UNSPLASH IMAGE
+        // We do not scrape images to avoid 403 Forbidden / Hotlink blocking
+        $thumbnail = $data['fallback_image']; 
 
-        // Attempt Scraping
+        // Attempt Scraping Text Only
         try {
             $response = Http::timeout(10)->get($url);
             if ($response->ok()) {
@@ -75,12 +78,12 @@ class ArticleSeeder extends Seeder
                     }
                 }
 
-                // Try to get Content (simpler, less filtering)
+                // Try to get Content - include headings for structure
                 $contentNode = $page->filter('article, .entry-content, .post-content')->first();
                 if ($contentNode->count()) {
-                    $texts = $contentNode->filter('p')->each(function (Crawler $node) {
+                    $texts = $contentNode->filter('p, h2, h3')->each(function (Crawler $node) {
                         $text = trim($node->text());
-                        // Only basic filtering
+                        // Filter out short/useless lines
                         if (strlen($text) > 30) {
                             return $text;
                         }
@@ -88,27 +91,15 @@ class ArticleSeeder extends Seeder
                     });
                     $content = implode("\n\n", array_filter($texts));
                 }
-
-                // Try to get Image
-                if ($page->filter('article img, .post-thumbnail img, img[src*="wp-content"]')->count()) {
-                    $imgNode = $page->filter('article img, .post-thumbnail img, img[src*="wp-content"]')->first();
-                    $src = $imgNode->attr('src');
-                    if ($src && str_starts_with($src, 'http')) {
-                        $thumbnail = $src;
-                    } elseif ($src) {
-                        $thumbnail = 'https://beyondchats.com' . ltrim($src, '/');
-                    }
-                }
             }
         } catch (\Exception $e) {
             echo "  ⚠️  Scraping error: " . $e->getMessage() . "\n";
         }
 
-        // VALIDATION: If scraping failed or returned too little text, USE FALLBACK
+        // VALIDATION: If scraping text failed, use fallback text
         if (strlen($content) < 500) {
-            echo "  ⚠️  Insufficient scraped data (" . strlen($content) . " chars). Using high-quality fallback.\n";
+            echo "  ⚠️  Insufficient text data (" . strlen($content) . " chars). Using fallback content.\n";
             $content = $data['fallback_content'];
-            $thumbnail = $data['fallback_image']; // Use reliable Unsplash image
         } else {
             echo "  ✅ Successfully scraped " . strlen($content) . " chars, " . str_word_count($content) . " words\n";
         }
@@ -121,7 +112,7 @@ class ArticleSeeder extends Seeder
                 'content' => $content,
                 'excerpt' => substr($content, 0, 150) . '...',
                 'author' => 'BeyondChats',
-                'thumbnail' => $thumbnail,
+                'thumbnail' => $thumbnail, // Uses Unsplash - guaranteed to work
                 'published_date' => Carbon::now()->subMonths(5 - $index),
                 'scraped_at' => Carbon::now(),
                 'is_enhanced' => false,
@@ -142,7 +133,7 @@ class ArticleSeeder extends Seeder
                 'content' => $enhancedContent,
                 'excerpt' => 'AI-enhanced analysis with strategic insights and actionable recommendations.',
                 'author' => 'BeyondChats AI',
-                'thumbnail' => $thumbnail,
+                'thumbnail' => $thumbnail, // Uses Unsplash - guaranteed to work
                 'published_date' => Carbon::now()->subMonths(5 - $index)->addHour(),
                 'scraped_at' => Carbon::now(),
                 'is_enhanced' => true,
@@ -158,6 +149,6 @@ class ArticleSeeder extends Seeder
             ]
         );
 
-        echo "  💾 Saved: $title\n\n";
+        echo "  💾 Saved: $title (with Unsplash image)\n\n";
     }
 }
