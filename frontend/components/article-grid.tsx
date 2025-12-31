@@ -40,7 +40,14 @@ export default function ArticleGrid({ page, searchQuery, filters, onTotalPagesCh
         }
         
         if (filters.sortBy) {
-          params.sortBy = filters.sortBy
+          // Map frontend sortBy values to backend column names
+          const sortByMap: Record<string, string> = {
+            'latest': '-published_date',
+            'oldest': 'published_date',
+            'title': 'title',
+            '-title': '-title'
+          }
+          params.sortBy = sortByMap[filters.sortBy] || '-published_date'
         }
         
         const response = await getAllArticles(params)
