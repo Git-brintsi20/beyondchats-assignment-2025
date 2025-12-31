@@ -12,7 +12,7 @@
 
 **A sophisticated three-phase system combining web scraping, AI-powered content enhancement, and modern frontend design**
 
-[Live Demo](#) • [Documentation](#-documentation) • [Installation](#-quick-start) • [API Reference](#-api-documentation)
+[Live Demo](https://beyond-chats-asst-2025.vercel.app) • [Documentation](#-documentation) • [Installation](#-quick-start) • [API Reference](#-api-documentation)
 
 </div>
 
@@ -115,7 +115,7 @@ This full-stack application demonstrates advanced web development capabilities t
 
 **Assignment Context:** BeyondChats Full Stack Developer Position  
 **Development Period:** December 2025  
-**Status:** ✅ Complete (3/3 phases) - Ready for deployment
+**Status:** ✅ Complete (3/3 phases) - Deployed and Live
 
 ---
 
@@ -902,7 +902,7 @@ frontend/
 | **Frequent Commits** | ✅ | 50+ commits showing development progression |
 | **README with Setup** | ✅ | Comprehensive README (this file) with all instructions |
 | **Architecture Diagram** | ✅ | Mermaid diagrams showing system architecture & data flow |
-| **Live Frontend Link** | ⏳ | Pending deployment (Vercel) |
+| **Live Frontend Link** | ✅ | [Live on Vercel](https://beyond-chats-asst-2025.vercel.app) |
 | **Code Quality** | ✅ | Clean, documented, following best practices |
 | **Documentation** | ✅ | 5 detailed documentation files in `docs/` |
 
@@ -1062,11 +1062,11 @@ beyondchats-assignment/
 
 ### Live Demo Links
 
-**Status:** ⏳ Deployment in progress
+**Status:** ✅ Live and Running
 
-- **Frontend (Next.js):** [Coming Soon - Vercel]
-- **Backend API (Laravel):** [Coming Soon - Render/Railway]
-- **Video Walkthrough:** [Coming Soon - Loom]
+- **Frontend (Next.js):** [https://beyond-chats-asst-2025.vercel.app](https://beyond-chats-asst-2025.vercel.app)
+- **Backend API (Laravel):** [https://beyondchats-backend-31x1.onrender.com/api](https://beyondchats-backend-31x1.onrender.com/api)
+- **API Health Check:** [https://beyondchats-backend-31x1.onrender.com/api/health](https://beyondchats-backend-31x1.onrender.com/api/health)
 
 ### Deployment Instructions
 
