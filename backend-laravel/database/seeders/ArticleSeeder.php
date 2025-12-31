@@ -137,7 +137,15 @@ class ArticleSeeder extends Seeder
         ];
 
         foreach ($articles as $article) {
-            Article::create($article);
+            // Extract URL as the unique identifier
+            $url = $article['url'];
+            unset($article['url']);
+            
+            // Use updateOrCreate to make seeder idempotent (safe to run multiple times)
+            Article::updateOrCreate(
+                ['url' => $url], // Match on URL
+                $article // Update/Create with these values
+            );
         }
     }
 }
