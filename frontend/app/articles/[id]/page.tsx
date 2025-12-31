@@ -216,26 +216,8 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
             <div className="space-y-6 leading-relaxed">
               {article.content.split('\n\n').map((paragraph, idx) => {
                 const trimmed = paragraph.trim();
-                // Skip if empty or very short
-                if (!trimmed || trimmed.length < 5) return null;
+                if (!trimmed || trimmed.length < 10) return null;
                 
-                // --- FIXED DUPLICATE TITLE LOGIC ---
-                // Remove ALL non-alphanumeric chars (including spaces) for strict comparison
-                const cleanPara = trimmed.toLowerCase().replace(/[^a-z0-9]/g, '');
-                const cleanTitle = article.title.toLowerCase().replace(/[^a-z0-9]/g, '');
-                
-                // 1. Exact match (ignoring spaces/grammar)
-                if (cleanPara === cleanTitle) return null;
-                
-                // 2. Substring match (e.g. "Title - By Author")
-                // Only if paragraph is relatively short (< 300 chars) to avoid hiding long intro paragraphs
-                if (cleanPara.length < 300) {
-                    if (cleanPara.includes(cleanTitle) || cleanTitle.includes(cleanPara)) {
-                        return null;
-                    }
-                }
-                // ------------------------------------
-
                 return (
                   <p key={idx} className="text-foreground/90 text-base md:text-lg leading-8">
                     {trimmed}
